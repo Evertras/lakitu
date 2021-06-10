@@ -9,6 +9,7 @@ and products that get installed on infrastructure and Ansible to maintain them.
 ## Requirements
 
 * Makefile
+* [Python 3.9.5](https://github.com/pyenv/pyenv)
 * [Vagrant](https://www.vagrantup.com/downloads) (See below for why)
 
 ## Techs used + Reasoning
