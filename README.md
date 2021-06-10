@@ -26,3 +26,23 @@ Note that we can't vendor this tool because Vagrant's install process also helps
 set up a virtual machine provider.  [Check the Vagrant downloads page](https://www.vagrantup.com/downloads)
 for proper instructions on installing Vagrant.
 
+## Running it
+
+```bash
+# Start the machines
+vagrant up
+
+# Apply the Ansible roles
+make ansible-apply
+
+# Try a sample Nomad job
+./bin/nomad run samples/hello-world.nomad
+
+# Check the output to see which host it ran on
+./bin/nomad status hello
+./bin/nomad alloc logs abcdef hostname
+
+# Tear everything down
+vagrant destroy -f
+```
+

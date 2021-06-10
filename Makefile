@@ -13,7 +13,7 @@ ensure-python:
 		(echo "ERROR: Python version must be 3.9" && exit 1)
 
 .PHONY: ansible-apply
-ansible-apply: .venv/bin/ansible ansible/roles/nomad/files/nomad
+ansible-apply: .venv/bin/ansible ansible/roles/nomad/files/nomad bin/nomad
 	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml playbook.yaml
 
 .PHONY: ansible-restart-nomad
