@@ -3,7 +3,9 @@ datacenter = "dc1"
 client {
   enabled = true
   servers = [
-    "{{ hostvars['lakitu']['nomad_advertise_ip'] }}:4647",
+{% for host in nomad_servers %}
+    "{{ hostvars[host].nomad_advertise_ip }}:4647",
+{% endfor %}
   ]
 }
 
