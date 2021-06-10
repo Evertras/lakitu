@@ -1,0 +1,17 @@
+---
+- hosts: lakitus
+  become: true
+  tasks:
+    - name: Restart Nomad (Server)
+      systemd:
+        name: nomad.service
+        state: restarted
+
+- hosts: spineys
+  become: true
+  tasks:
+    - name: Restart Nomad (Agents)
+      systemd:
+        name: nomad.service
+        state: restarted
+

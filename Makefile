@@ -1,3 +1,5 @@
+NOMAD_VERSION := 1.1.1
+
 # Install things and make sure we have everything we need
 .PHONY: ensure-env
 ensure-env: ensure-python .venv/bin/ansible
@@ -14,6 +16,10 @@ ensure-python:
 ansible-apply: .venv/bin/ansible ansible/roles/nomad/files/nomad
 	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml playbook.yaml
 
+.PHONY: ansible-restart-nomad
+ansible-restart-nomad: .venv/bin/ansible
+	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml restart-nomad.yaml
+
 .PHONY: ansible-ping
 ansible-ping: .venv/bin/ansible
 	@cd ansible && ../.venv/bin/ansible -m ping -i inventory.yaml all
@@ -23,6 +29,7 @@ ansible-ping: .venv/bin/ansible
 clean:
 	rm -rf .venv
 	rm -rf bin
+	rm ansible/roles/nomad/files/nomad
 
 # Local pip
 .venv/bin/pip:
@@ -43,12 +50,12 @@ endif
 bin/nomad:
 	@mkdir -p bin
 	curl -o bin/nomad.zip \
-		https://releases.hashicorp.com/nomad/1.1.1/nomad_1.1.1_$(OS_URL)_amd64.zip
+		https://releases.hashicorp.com/nomad/$(NOMAD_VERSION)/nomad_$(NOMAD_VERSION)_$(OS_URL)_amd64.zip
 	@cd bin && unzip nomad.zip
 	@rm bin/nomad.zip
 
 # Nomad for the Linux VMs
 ansible/roles/nomad/files/nomad:
-	curl -o ansible/roles/nomad/files/nomad.zip https://releases.hashicorp.com/nomad/1.1.1/nomad_1.1.1_linux_amd64.zip
+	curl -o ansible/roles/nomad/files/nomad.zip https://releases.hashicorp.com/nomad/$(NOMAD_VERSION)/nomad_$(NOMAD_VERSION)_linux_amd64.zip
 	cd ansible/roles/nomad/files && unzip nomad.zip && rm nomad.zip
 
