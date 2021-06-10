@@ -14,6 +14,15 @@ and products that get installed on infrastructure and Ansible to maintain them.
 
 Everything else should be installed through the Makefile in a local scope only.
 
+### Direnv
+
+[Direnv](https://github.com/direnv/direnv) allows us to set local environment
+files and add to our path while working within this repository.
+
+[A sample .envrc file](./envrc.example) has been added for reference.  Direnv
+is not strictly necessary, but it will make playing around with CLI tools against
+the cluster much, much easier.
+
 ## Running it
 
 Check the Makefile for some more commands to run, but here's the starting idea:
@@ -28,12 +37,14 @@ make ansible-ping
 # Apply the Ansible roles
 make ansible-apply
 
-# Try a sample Nomad job
-./bin/nomad run samples/hello-world.nomad
+# Try a sample Nomad job - note this uses the values in .envrc.example to point
+# to the cluster and use our local Nomad CLI binary.  If you don't use direnv,
+# you should set NOMAD_ADDR and use ./bin/nomad instead.
+nomad run samples/hello-world.nomad
 
 # Check the output to see which host it ran on
-./bin/nomad status hello
-./bin/nomad alloc logs abcdef hostname
+nomad status hello
+nomad alloc logs abcdef hostname
 
 # Tear everything down
 vagrant destroy -f

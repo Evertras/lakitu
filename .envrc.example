@@ -1,0 +1,9 @@
+# Add the local bin for downloaded tools
+PATH_add bin
+
+# Add the Python virtual environment's bin
+PATH_add .venv/bin
+
+# Point Nomad at the main server
+export NOMAD_ADDR=http://192.168.3.2:4646
+
