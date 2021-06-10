@@ -12,9 +12,13 @@ Vagrant.configure("2") do |config|
     lakitu.vm.network "private_network", ip: "192.168.3.2"
   end
 
-  # This is an agent server that runs things that connect to the main host
+  # These are agent servers that run things that connect to the main host
   config.vm.define "spiney1" do |spiney1|
     spiney1.vm.hostname = "spiney1"
     spiney1.vm.network "private_network", ip: "192.168.3.3"
+  end
+  config.vm.define "spiney2" do |spiney2|
+    spiney2.vm.hostname = "spiney2"
+    spiney2.vm.network "private_network", ip: "192.168.3.4"
   end
 end
