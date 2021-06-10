@@ -16,9 +16,14 @@ Everything else should be installed through the Makefile in a local scope only.
 
 ## Running it
 
+Check the Makefile for some more commands to run, but here's the starting idea:
+
 ```bash
 # Start the machines
 vagrant up
+
+# Quick sanity check to see if we can reach our hosts
+make ansible-ping
 
 # Apply the Ansible roles
 make ansible-apply
