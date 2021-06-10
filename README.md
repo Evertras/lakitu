@@ -58,3 +58,16 @@ as if we were targeting regular machines that live somewhere else.
 
 Ansible is installed via the Makefile using a Python virtual environment.
 
+### Nomad
+
+[Hashicorp Nomad](https://nomadproject.io) runs various arbitrary workloads
+and allows us to connect our machines together in a cluster where we can run
+various things.  This is nicer than Kubernetes in this particular case because
+we can run things directly on the VM itself.
+
+### Consul
+
+[Hashicorp Consul](https://www.consul.io) is service mesh, networking thing that
+Nomad uses to coordinate itself.  Mostly I just want to actually learn to use
+Consul in a sandbox area to see what it can really do.
+
