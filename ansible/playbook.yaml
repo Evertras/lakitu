@@ -1,7 +1,6 @@
 ---
 - hosts: lakitus
   roles:
-    - nomad
     - nomad-server
 - hosts: spineys
   roles:

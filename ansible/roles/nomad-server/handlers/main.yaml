@@ -1,0 +1,8 @@
+---
+- name: Restart service
+  become: true
+  systemd:
+    name: nomad.service
+    daemon_reload: yes
+    state: restarted
+
