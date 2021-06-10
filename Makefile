@@ -10,6 +10,10 @@ ensure-python:
 	@test $(shell python -c 'import sys; print(".".join(map(str, sys.version_info[:3])))') == "3.9.5" || \
 		(echo "ERROR: Python version must be 3.9" && exit 1)
 
+.PHONY: ansible-ping
+ansible-ping: .venv/bin/ansible
+	@./.venv/bin/ansible -m ping -i inventory all
+
 # Clean any auto-generated things
 .PHONY: clean
 clean:

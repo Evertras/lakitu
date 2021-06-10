@@ -1,0 +1,12 @@
+[lakitus]
+lakitu ansible_host=192.167.3.2 ansible_ssh_private_key_file=.vagrant/machines/lakitu/virtualbox/private_key
+
+[lakitus:vars]
+ansible_user=vagrant
+
+[spineys]
+spiney1 ansible_host=192.167.3.3 ansible_ssh_private_key_file=.vagrant/machines/spiney1/virtualbox/private_key
+
+[spineys:vars]
+ansible_user=vagrant
+
