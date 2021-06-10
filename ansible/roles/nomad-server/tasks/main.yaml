@@ -12,8 +12,11 @@
       src: nomad.service
       dest: /etc/systemd/system/nomad.service
     notify: Restart service
-  - name: Ensure service is enabled
+  - name: Flush handlers
+    meta: flush_handlers
+  - name: Ensure service is enabled and running
     systemd:
       name: nomad.service
       enabled: yes
+      state: started
 

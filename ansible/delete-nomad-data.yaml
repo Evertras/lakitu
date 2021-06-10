@@ -1,0 +1,13 @@
+---
+- hosts: lakitus,spineys
+  become: true
+  tasks:
+    - name: Stop Nomad (Server)
+      systemd:
+        name: nomad.service
+        state: stopped
+    - name: Delete data directory
+      file:
+        path: /opt/nomad
+        state: absent
+

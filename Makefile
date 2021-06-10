@@ -20,6 +20,10 @@ ansible-apply: .venv/bin/ansible ansible/roles/nomad/files/nomad bin/nomad
 ansible-restart-nomad: .venv/bin/ansible
 	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml restart-nomad.yaml
 
+.PHONY: ansible-delete-nomad-data
+ansible-delete-nomad-data: .venv/bin/ansible
+	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml delete-nomad-data.yaml
+
 .PHONY: ansible-ping
 ansible-ping: .venv/bin/ansible
 	@cd ansible && ../.venv/bin/ansible -m ping -i inventory.yaml all
