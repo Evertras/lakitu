@@ -1,0 +1,12 @@
+# This is the top level .editorconfig, don't go up any higher
+root = true
+
+# Defaults
+[*]
+indent_style = space
+indent_size = 2
+
+[Makefile]
+# Makefile requires tabs
+indent_style = tab
+
