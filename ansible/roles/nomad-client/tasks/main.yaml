@@ -1,4 +1,19 @@
 ---
-- name: Ping check
-  ping:
+- become: true
+  become_user: root
+  block:
+  - name: Render client.hcl
+    template:
+      src: client.hcl
+      dest: /etc/nomad.d/client.hcl
+    notify: Restart service
+  - name: Copy nomad.service
+    copy:
+      src: nomad.service
+      dest: /etc/systemd/system/nomad.service
+    notify: Restart service
+  - name: Ensure service is enabled
+    systemd:
+      name: nomad.service
+      enabled: yes
 

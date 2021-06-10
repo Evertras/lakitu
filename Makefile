@@ -12,11 +12,11 @@ ensure-python:
 
 .PHONY: ansible-apply
 ansible-apply: .venv/bin/ansible ansible/roles/nomad/files/nomad
-	@cd ansible && ../.venv/bin/ansible-playbook -i inventory playbook.yaml
+	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml playbook.yaml
 
 .PHONY: ansible-ping
 ansible-ping: .venv/bin/ansible
-	@cd ansible && ../.venv/bin/ansible -m ping -i inventory all
+	@cd ansible && ../.venv/bin/ansible -m ping -i inventory.yaml all
 
 # Clean any auto-generated things
 .PHONY: clean

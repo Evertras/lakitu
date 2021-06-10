@@ -4,6 +4,5 @@
     - nomad-server
 - hosts: spineys
   roles:
-    - nomad
     - nomad-client
 

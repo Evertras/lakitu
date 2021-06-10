@@ -9,12 +9,12 @@ Vagrant.configure("2") do |config|
   # This is the main host where we run servers/etc
   config.vm.define "lakitu", primary: true do |lakitu|
     lakitu.vm.hostname = "lakitu"
-    lakitu.vm.network "private_network", ip: "192.167.3.2"
+    lakitu.vm.network "private_network", ip: "192.168.3.2"
   end
 
   # This is an agent server that runs things that connect to the main host
   config.vm.define "spiney1" do |spiney1|
     spiney1.vm.hostname = "spiney1"
-    spiney1.vm.network "private_network", ip: "192.167.3.3"
+    spiney1.vm.network "private_network", ip: "192.168.3.3"
   end
 end

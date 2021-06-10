@@ -1,27 +1,19 @@
 ---
-- block:
-  - name: Ensure data directory exists
-    file:
-      path: /opt/nomad
-      state: directory
-  - name: Ensure configuration directory exists
-    file:
-      path: /etc/nomad/
-      state: directory
-  - name: Copy server.hcl
-    copy:
+- become: true
+  become_user: root
+  block:
+  - name: Render server.hcl
+    template:
       src: server.hcl
-      dest: /etc/nomad/server.hcl
+      dest: /etc/nomad.d/server.hcl
+    notify: Restart service
   - name: Copy nomad.service
     copy:
       src: nomad.service
       dest: /etc/systemd/system/nomad.service
     notify: Restart service
-  - name: Ensure servive is enabled
+  - name: Ensure service is enabled
     systemd:
       name: nomad.service
       enabled: yes
-
-  become: true
-  become_user: root
 
