@@ -1,0 +1,9 @@
+---
+- name: Install Nomad
+  become: true
+  become_user: root
+  copy:
+    src: nomad
+    dest: /usr/local/bin/nomad
+    mode: 0755
+

@@ -1,2 +1,6 @@
+/.envrc
 /.vagrant
 /.venv
+/bin
+
+ansible/roles/nomad/files/nomad
