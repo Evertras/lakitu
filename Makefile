@@ -12,7 +12,7 @@ ensure-python:
 
 .PHONY: ansible-ping
 ansible-ping: .venv/bin/ansible
-	@./.venv/bin/ansible -m ping -i inventory all
+	@cd ansible && ../.venv/bin/ansible -m ping -i inventory all
 
 # Clean any auto-generated things
 .PHONY: clean
