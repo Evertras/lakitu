@@ -87,3 +87,16 @@ we can run things directly on the VM itself.
 Nomad uses to coordinate itself.  Mostly I just want to actually learn to use
 Consul in a sandbox area to see what it can really do.
 
+## Various TODOs
+
+In no particular order and not an exclusive list, just jotting things down here.
+
+* Pin ansible version in virtualenv
+* Add Vault and put Consul encryption into Vault
+* Add Minio
+* Add some microservices via Nomad + Consul discovery
+* Figure out whether x.service should be in x-server or x (Nomad/Consul)
+* RPC encryption for Consul
+* Create multiple lakitus to make a real clustered server plane
+* Play with Consul templating
+

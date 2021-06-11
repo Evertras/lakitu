@@ -20,6 +20,7 @@ ensure-python:
 ansible-apply: \
 	.venv/bin/ansible \
 	ansible/roles/consul/files/consul \
+	ansible/roles/consul/vars/main.yaml \
 	ansible/roles/nomad/files/nomad \
 	bin/consul \
 	bin/nomad
@@ -30,6 +31,11 @@ ansible-apply: \
 .PHONY: ansible-restart-nomad
 ansible-restart-nomad: .venv/bin/ansible
 	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml restart-nomad.yaml
+
+# Forces a restart of all the Consul services
+.PHONY: ansible-restart-consul
+ansible-restart-consul: .venv/bin/ansible
+	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml restart-consul.yaml
 
 # Stops any running Nomad services and deletes all the data directories.
 # Useful to reset to a fresh state without destroying/recreating everything.
@@ -47,7 +53,9 @@ ansible-ping: .venv/bin/ansible
 clean:
 	rm -rf .venv
 	rm -rf bin
-	rm ansible/roles/nomad/files/nomad
+	rm -f ansible/roles/nomad/files/nomad
+	rm -f ansible/roles/consul/files/consul
+	rm -f ansible/roles/consul/vars/main.yaml
 
 # Local pip
 .venv/bin/pip:
@@ -89,4 +97,8 @@ ansible/roles/nomad/files/nomad:
 ansible/roles/consul/files/consul:
 	curl -o ansible/roles/consul/files/consul.zip https://releases.hashicorp.com/consul/$(CONSUL_VERSION)/consul_$(CONSUL_VERSION)_linux_amd64.zip
 	cd ansible/roles/consul/files && unzip consul.zip && rm consul.zip
+
+# Generate an encryption key on the fly
+ansible/roles/consul/vars/main.yaml: bin/consul
+	@echo "---\nconsul_encryption_key: $(shell ./bin/consul keygen)" > ansible/roles/consul/vars/main.yaml
 

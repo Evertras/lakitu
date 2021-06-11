@@ -1,5 +1,5 @@
 ---
-- name: Restart service
+- name: Restart nomad
   become: true
   systemd:
     name: nomad.service

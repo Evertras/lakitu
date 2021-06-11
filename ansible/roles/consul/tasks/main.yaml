@@ -7,4 +7,44 @@
       src: consul
       dest: /usr/local/bin/consul
       mode: 0755
+  - name: Create consul user
+    user:
+      name: consul
+      home: /etc/consul.d/
+      shell: /bin/false
+      system: yes
+  - name: Ensure config directory exists
+    file:
+      path: /etc/consul.d
+      state: directory
+      owner: consul
+      group: consul
+    notify: Restart consul
+  - name: Apply base config
+    template:
+      src: 00-base.hcl
+      dest: /etc/consul.d/00-base.hcl
+      mode: 0640
+      owner: consul
+      group: consul
+    notify: Restart consul
+  - name: Ensure data directory exists
+    file:
+      path: /opt/consul
+      state: directory
+      owner: consul
+      group: consul
+    notify: Restart consul
+  - name: Install Consul service
+    copy:
+      src: consul.service
+      dest: /etc/systemd/system/consul.service
+    notify: Restart consul
+  - name: Flush handlers
+    meta: flush_handlers
+  - name: Ensure Consul is running
+    systemd:
+      name: consul.service
+      state: started
+      enabled: yes
 

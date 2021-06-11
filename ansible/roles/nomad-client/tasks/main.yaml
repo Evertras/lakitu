@@ -8,17 +8,5 @@
     template:
       src: client.hcl
       dest: /etc/nomad.d/client.hcl
-    notify: Restart service
-  - name: Copy nomad.service
-    copy:
-      src: nomad.service
-      dest: /etc/systemd/system/nomad.service
-    notify: Restart service
-  - name: Flush handlers
-    meta: flush_handlers
-  - name: Ensure service is enabled
-    systemd:
-      name: nomad.service
-      enabled: yes
-      state: started
+    notify: Restart nomad
 

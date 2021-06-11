@@ -23,4 +23,17 @@
     template:
       src: advertise.hcl
       dest: /etc/nomad.d/advertise.hcl
+  - name: Copy nomad.service
+    copy:
+      src: nomad.service
+      dest: /etc/systemd/system/nomad.service
+    notify: Restart nomad
+  - name: Flush handlers
+    meta: flush_handlers
+  - name: Ensure service is enabled
+    systemd:
+      name: nomad.service
+      enabled: yes
+      state: started
+
 

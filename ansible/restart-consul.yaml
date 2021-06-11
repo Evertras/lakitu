@@ -1,0 +1,17 @@
+---
+- hosts: lakitus
+  become: true
+  tasks:
+    - name: Restart Consul (Server)
+      systemd:
+        name: consul.service
+        state: restarted
+
+- hosts: spineys
+  become: true
+  tasks:
+    - name: Restart Consul (Agents)
+      systemd:
+        name: consul.service
+        state: restarted
+

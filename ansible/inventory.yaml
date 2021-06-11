@@ -3,20 +3,21 @@ lakitus:
     lakitu:
       ansible_host: 192.168.3.2
       ansible_ssh_private_key_file: ../.vagrant/machines/lakitu/virtualbox/private_key 
-      nomad_advertise_ip: 192.168.3.2
+      advertise_ip: 192.168.3.2
   vars:
     ansible_user: vagrant
+    consul_server: 'true'
 
 spineys:
   hosts:
     spiney1:
       ansible_host: 192.168.3.3
       ansible_ssh_private_key_file: ../.vagrant/machines/spiney1/virtualbox/private_key 
-      nomad_advertise_ip: 192.168.3.3
+      advertise_ip: 192.168.3.3
     spiney2:
       ansible_host: 192.168.3.4
       ansible_ssh_private_key_file: ../.vagrant/machines/spiney2/virtualbox/private_key 
-      nomad_advertise_ip: 192.168.3.4
+      advertise_ip: 192.168.3.4
   vars:
     ansible_user: vagrant
 

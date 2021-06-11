@@ -1,8 +1,8 @@
-bind_addr = "{{ nomad_advertise_ip }}"
+bind_addr = "{{ advertise_ip }}"
 
 advertise {
-  http = "{{ nomad_advertise_ip }}"
-  rpc = "{{ nomad_advertise_ip }}"
-  serf = "{{ nomad_advertise_ip }}"
+  http = "{{ advertise_ip }}"
+  rpc = "{{ advertise_ip }}"
+  serf = "{{ advertise_ip }}"
 }
 
