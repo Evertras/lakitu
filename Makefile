@@ -1,6 +1,8 @@
 # Which version of Nomad to put on the machines and have locally
 NOMAD_VERSION := 1.1.1
 
+CONSUL_VERSION := 1.9.6
+
 # Install things and make sure we have everything we need
 .PHONY: ensure-env
 ensure-env: ensure-python .venv/bin/ansible
@@ -15,7 +17,13 @@ ensure-python:
 
 # Makes sure all services are installed/running
 .PHONY: ansible-apply
-ansible-apply: .venv/bin/ansible ansible/roles/nomad/files/nomad bin/nomad
+ansible-apply: \
+	.venv/bin/ansible \
+	ansible/roles/consul/files/consul \
+	ansible/roles/nomad/files/nomad \
+	bin/consul \
+	bin/nomad
+
 	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml playbook.yaml
 
 # Forces a restart of all the Nomad services
@@ -64,8 +72,21 @@ bin/nomad:
 	@cd bin && unzip nomad.zip
 	@rm bin/nomad.zip
 
+# Local Consul
+bin/consul:
+	@mkdir -p bin
+	curl -o bin/consul.zip \
+		https://releases.hashicorp.com/consul/$(CONSUL_VERSION)/consul_$(CONSUL_VERSION)_$(OS_URL)_amd64.zip
+	@cd bin && unzip consul.zip
+	@rm bin/consul.zip
+
 # Nomad for the Linux VMs
 ansible/roles/nomad/files/nomad:
 	curl -o ansible/roles/nomad/files/nomad.zip https://releases.hashicorp.com/nomad/$(NOMAD_VERSION)/nomad_$(NOMAD_VERSION)_linux_amd64.zip
 	cd ansible/roles/nomad/files && unzip nomad.zip && rm nomad.zip
+
+# Consul for the Linux VMs
+ansible/roles/consul/files/consul:
+	curl -o ansible/roles/consul/files/consul.zip https://releases.hashicorp.com/consul/$(CONSUL_VERSION)/consul_$(CONSUL_VERSION)_linux_amd64.zip
+	cd ansible/roles/consul/files && unzip consul.zip && rm consul.zip
 

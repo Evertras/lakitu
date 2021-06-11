@@ -3,4 +3,7 @@
 /.venv
 /bin
 
+ansible/roles/consul/files/consul
+ansible/roles/consul/files/consul.zip
 ansible/roles/nomad/files/nomad
+ansible/roles/nomad/files/nomad.zip

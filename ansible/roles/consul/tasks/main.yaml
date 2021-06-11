@@ -1,0 +1,10 @@
+---
+- become: true
+  become_user: root
+  block:
+  - name: Install Consul
+    copy:
+      src: consul
+      dest: /usr/local/bin/consul
+      mode: 0755
+
