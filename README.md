@@ -50,6 +50,9 @@ nomad node status
 # Sanity check Consul - should see all hosts as members
 consul members
 
+# You can check the Consul UI here:
+open http://192.168.3.2:8500/ui
+
 # Try a sample Nomad job - note this uses the values in .envrc.example to point
 # to the cluster and use our local Nomad CLI binary.  If you don't use direnv,
 # you should set NOMAD_ADDR and use ./bin/nomad instead.
