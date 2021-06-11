@@ -8,11 +8,15 @@ and products that get installed on infrastructure and Ansible to maintain them.
 
 ## Requirements
 
+The following must be explicitly installed on the host machine.
+
 * Makefile
 * [Python 3.9.5](https://github.com/pyenv/pyenv)
 * [Vagrant](https://www.vagrantup.com/downloads) (See below for why)
 
 Everything else should be installed through the Makefile in a local scope only.
+
+This is being developed on a mac, but should also work fine on Linux.
 
 ### Direnv
 
@@ -36,6 +40,12 @@ make ansible-ping
 
 # Apply the Ansible roles
 make ansible-apply
+
+# Sanity check Nomad - should see the spineys ready after a short time
+nomad node status
+
+# Sanity check Consul - should see all hosts as members
+consul members
 
 # Try a sample Nomad job - note this uses the values in .envrc.example to point
 # to the cluster and use our local Nomad CLI binary.  If you don't use direnv,
@@ -99,4 +109,5 @@ In no particular order and not an exclusive list, just jotting things down here.
 * RPC encryption for Consul
 * Create multiple lakitus to make a real clustered server plane
 * Play with Consul templating
+* Consul auth for API/CLI from host machine
 
