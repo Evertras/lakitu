@@ -28,6 +28,15 @@
       owner: consul
       group: consul
     notify: Restart consul
+  - name: Apply server config
+    template:
+      src: 10-server.hcl
+      dest: /etc/consul.d/10-server.hcl
+      mode: 0640
+      owner: consul
+      group: consul
+    when: consul_server is defined and consul_server == 'true'
+    notify: Restart consul
   - name: Ensure data directory exists
     file:
       path: /opt/consul
