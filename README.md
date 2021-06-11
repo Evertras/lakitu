@@ -29,7 +29,10 @@ the cluster much, much easier.
 
 ## Running it
 
-Check the Makefile for some more commands to run, but here's the starting idea:
+Check the Makefile for some more commands to run, but here's the starting idea.
+Note that this assumes you have `direnv` enabled and a `.envrc` the same as
+the example; otherwise you'll need to set these yourself and use `./bin/nomad`
+and `./bin/consul` directly.
 
 ```bash
 # Start the machines
