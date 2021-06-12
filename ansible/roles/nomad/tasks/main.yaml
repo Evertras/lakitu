@@ -27,8 +27,6 @@
     when: nomad_server is defined and nomad_server == 'true'
     notify: Restart nomad
   - name: Render client config
-    vars:
-      nomad_servers: "{{ groups['lakitus'] }}"
     template:
       src: 10-client.hcl
       dest: /etc/nomad.d/10-client.hcl
