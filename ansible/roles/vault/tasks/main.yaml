@@ -2,6 +2,47 @@
 - become: true
   become_user: root
   block:
-  - name: Test
-    debug:
+  - name: Install Vault binary
+    copy:
+      src: vault
+      dest: /usr/local/bin/vault
+      mode: 0755
+    notify:
+      - Setcap on Vault binary
+      - Restart Vault service
+  - name: Create Vault user
+    user:
+      name: vault
+      home: /etc/vault.d/
+      shell: /bin/false
+      system: yes
+    notify: Restart Vault service
+  - name: Ensure config directory exists
+    file:
+      path: /etc/vault.d
+      state: directory
+      owner: vault
+      group: vault
+  - name: Render config
+    template:
+      src: vault.hcl
+      dest: /etc/vault.d/vault.hcl
+      owner: vault
+      group: vault
+      mode: 0640
+    notify: Restart Vault service
+  - name: Install Vault service
+    copy:
+      src: vault.service
+      dest: /etc/systemd/system/vault.service
+    notify: Restart Vault service
+
+  - name: Flush handlers
+    meta: flush_handlers
+
+  - name: Ensure service is enabled
+    systemd:
+      name: vault.service
+      enabled: yes
+      state: started
 

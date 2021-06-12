@@ -1,0 +1,13 @@
+---
+- name: Setcap on Vault binary
+  community.general.capabilities:
+    path: /usr/local/bin/vault
+    capability: cap_ipc_lock+ep
+    state: present
+- name: Restart Vault service
+  become: true
+  systemd:
+    name: vault.service
+    daemon_reload: yes
+    state: restarted
+
