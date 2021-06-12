@@ -7,6 +7,7 @@ lakitus:
   vars:
     ansible_user: vagrant
     consul_server: 'true'
+    nomad_server: 'true'
 
 spineys:
   hosts:

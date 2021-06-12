@@ -1,3 +1,5 @@
+datacenter = "dc1"
+
 bind_addr = "{{ advertise_ip }}"
 
 advertise {

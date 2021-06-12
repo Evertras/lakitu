@@ -15,14 +15,25 @@
     file:
       path: /etc/nomad.d
       state: directory
-  - name: Copy data dir configuration
-    copy:
-      src: data-dir.hcl
-      dest: /etc/nomad.d/data-dir.hcl
-  - name: Render advertise config
+  - name: Render base config
     template:
-      src: advertise.hcl
-      dest: /etc/nomad.d/advertise.hcl
+      src: 00-base.hcl
+      dest: /etc/nomad.d/00-base.hcl
+    notify: Restart nomad
+  - name: Render server config
+    template:
+      src: 10-server.hcl
+      dest: /etc/nomad.d/10-server.hcl
+    when: nomad_server is defined and nomad_server == 'true'
+    notify: Restart nomad
+  - name: Render client config
+    vars:
+      nomad_servers: "{{ groups['lakitus'] }}"
+    template:
+      src: 10-client.hcl
+      dest: /etc/nomad.d/10-client.hcl
+    when: nomad_server is not defined or nomad_server != 'true'
+    notify: Restart nomad
   - name: Copy nomad.service
     copy:
       src: nomad.service
@@ -35,5 +46,4 @@
       name: nomad.service
       enabled: yes
       state: started
-
 

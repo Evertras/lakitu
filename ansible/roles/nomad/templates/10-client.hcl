@@ -1,5 +1,3 @@
-datacenter = "dc1"
-
 client {
   enabled = true
   servers = [
