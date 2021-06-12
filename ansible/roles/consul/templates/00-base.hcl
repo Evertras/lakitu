@@ -1,3 +1,4 @@
+datacenter = "mushroom-kingdom"
 data_dir   = "/opt/consul"
 encrypt    = "{{ consul_encryption_key }}"
 log_level  = "INFO"

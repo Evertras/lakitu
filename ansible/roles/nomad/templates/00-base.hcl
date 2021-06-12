@@ -1,4 +1,4 @@
-datacenter = "dc1"
+datacenter = "mushroom-kingdom"
 
 data_dir = "/opt/nomad"
 
