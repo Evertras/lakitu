@@ -2,43 +2,72 @@
 - become: true
   become_user: root
   block:
-  - name: Install Nomad
+  - name: Install Nomad binary
     copy:
       src: nomad
       dest: /usr/local/bin/nomad
       mode: 0755
+      owner: root
   - name: Ensure data directory exists
     file:
       path: /opt/nomad
       state: directory
+      owner: root
   - name: Ensure Nomad config directory exists
     file:
       path: /etc/nomad.d
       state: directory
+      owner: root
   - name: Render base config
     template:
       src: 00-base.hcl
       dest: /etc/nomad.d/00-base.hcl
+      owner: root
     notify: Restart nomad
+
+  # NOTE: theoretically we could have nodes that are both servers and clients,
+  # but Nomad recommends against this in production for various good reasons.
+  # Even though this is a toy sandbox we're going to take this advice and make
+  # a server and client mutually exclusive.  We include the removal step to be
+  # safe in case something is rendered accidentally, or if a node switches roles.
   - name: Render server config
     template:
       src: 10-server.hcl
       dest: /etc/nomad.d/10-server.hcl
-    when: nomad_server is defined and nomad_server == 'true'
+      owner: root
+    when: is_nomad_server
+    notify: Restart nomad
+  - name: Remove server config from clients
+    file:
+      path: /etc/nomad.d/10-server.hcl
+      state: absent
+    when: is_nomad_server != true
     notify: Restart nomad
   - name: Render client config
     template:
       src: 10-client.hcl
       dest: /etc/nomad.d/10-client.hcl
-    when: nomad_server is not defined or nomad_server != 'true'
+      owner: root
+    when: is_nomad_server != true
     notify: Restart nomad
+  - name: Remove client config from servers
+    file:
+      path: /etc/nomad.d/10-client.hcl
+      state: absent
+    when: is_nomad_server
+    notify: Restart nomad
+
   - name: Copy nomad.service
     copy:
       src: nomad.service
       dest: /etc/systemd/system/nomad.service
+      owner: root
     notify: Restart nomad
+
+  # If we've been notified to restart nomad, now is the time to do it...
   - name: Flush handlers
     meta: flush_handlers
+
   - name: Ensure service is enabled
     systemd:
       name: nomad.service

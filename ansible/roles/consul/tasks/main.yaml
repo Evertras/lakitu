@@ -35,7 +35,7 @@
       mode: 0640
       owner: consul
       group: consul
-    when: consul_server is defined and consul_server == 'true'
+    when: is_consul_server
     notify: Restart consul
   - name: Ensure data directory exists
     file:

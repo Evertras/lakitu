@@ -6,8 +6,8 @@ lakitus:
       advertise_ip: 192.168.3.2
   vars:
     ansible_user: vagrant
-    consul_server: 'true'
-    nomad_server: 'true'
+    is_consul_server: true
+    is_nomad_server: true
 
 spineys:
   hosts:
