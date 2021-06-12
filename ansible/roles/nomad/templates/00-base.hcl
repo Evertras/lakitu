@@ -1,5 +1,7 @@
 datacenter = "dc1"
 
+data_dir = "/opt/nomad"
+
 bind_addr = "{{ advertise_ip }}"
 
 advertise {
