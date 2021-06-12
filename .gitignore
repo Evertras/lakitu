@@ -8,3 +8,6 @@ ansible/roles/consul/files/consul.zip
 ansible/roles/consul/vars/main.yaml
 ansible/roles/nomad/files/nomad
 ansible/roles/nomad/files/nomad.zip
+ansible/roles/vault/files/vault
+ansible/roles/vault/files/vault.zip
+

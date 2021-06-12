@@ -1,7 +1,7 @@
-# Which version of Nomad to put on the machines and have locally
+# Which versions of various tools to both put on the machines and have locally
 NOMAD_VERSION := 1.1.1
-
 CONSUL_VERSION := 1.9.6
+VAULT_VERSION := 1.7.2
 
 # Install things and make sure we have everything we need
 .PHONY: ensure-env
@@ -13,7 +13,7 @@ ensure-env: ensure-python .venv/bin/ansible
 .PHONY: ensure-python
 ensure-python:
 	@test $(shell python -c 'import sys; print(".".join(map(str, sys.version_info[:3])))') == "3.9.5" || \
-		(echo "ERROR: Python version must be 3.9" && exit 1)
+		(echo "ERROR: Python version must be 3.9.5, please use pyenv to manage the version properly" && exit 1)
 
 # Makes sure all services are installed/running
 .PHONY: ansible-apply
@@ -22,8 +22,10 @@ ansible-apply: \
 	ansible/roles/consul/files/consul \
 	ansible/roles/consul/vars/main.yaml \
 	ansible/roles/nomad/files/nomad \
+	ansible/roles/vault/files/vault \
 	bin/consul \
-	bin/nomad
+	bin/nomad \
+	bin/vault
 
 	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml playbook.yaml
 
@@ -53,9 +55,10 @@ ansible-ping: .venv/bin/ansible
 clean:
 	rm -rf .venv
 	rm -rf bin
-	rm -f ansible/roles/nomad/files/nomad
 	rm -f ansible/roles/consul/files/consul
 	rm -f ansible/roles/consul/vars/main.yaml
+	rm -f ansible/roles/nomad/files/nomad
+	rm -f ansible/roles/vault/files/vault
 
 # Local pip
 .venv/bin/pip:
@@ -88,6 +91,14 @@ bin/consul:
 	@cd bin && unzip consul.zip
 	@rm bin/consul.zip
 
+# Local Vault
+bin/vault:
+	@mkdir -p bin
+	curl -o bin/vault.zip \
+		https://releases.hashicorp.com/vault/$(VAULT_VERSION)/vault_$(VAULT_VERSION)_$(OS_URL)_amd64.zip
+	@cd bin && unzip vault.zip
+	@rm bin/vault.zip
+
 # Nomad for the Linux VMs
 ansible/roles/nomad/files/nomad:
 	curl -o ansible/roles/nomad/files/nomad.zip https://releases.hashicorp.com/nomad/$(NOMAD_VERSION)/nomad_$(NOMAD_VERSION)_linux_amd64.zip
@@ -97,6 +108,11 @@ ansible/roles/nomad/files/nomad:
 ansible/roles/consul/files/consul:
 	curl -o ansible/roles/consul/files/consul.zip https://releases.hashicorp.com/consul/$(CONSUL_VERSION)/consul_$(CONSUL_VERSION)_linux_amd64.zip
 	cd ansible/roles/consul/files && unzip consul.zip && rm consul.zip
+
+# Vault for the Linux VMs
+ansible/roles/vault/files/vault:
+	curl -o ansible/roles/vault/files/vault.zip https://releases.hashicorp.com/vault/$(VAULT_VERSION)/vault_$(VAULT_VERSION)_linux_amd64.zip
+	cd ansible/roles/vault/files && unzip vault.zip && rm vault.zip
 
 # Generate an encryption key on the fly
 ansible/roles/consul/vars/main.yaml: bin/consul
