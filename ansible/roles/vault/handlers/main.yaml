@@ -1,5 +1,7 @@
 ---
 - name: Setcap on Vault binary
+  become: true
+  become_user: root
   community.general.capabilities:
     path: /usr/local/bin/vault
     capability: cap_ipc_lock+ep

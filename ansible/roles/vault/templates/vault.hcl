@@ -1,4 +1,4 @@
-api_addr = "{{ advertise_ip }}:8200"
+api_addr = "http://{{ advertise_ip }}:8200"
 
 listener "tcp" {
   address = "{{ advertise_ip }}:8200"
