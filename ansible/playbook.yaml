@@ -3,5 +3,4 @@
   roles:
     - consul
     - nomad
-    - vault
 

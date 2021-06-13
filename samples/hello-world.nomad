@@ -1,5 +1,5 @@
 job "hello" {
-  datacenters = ["dc1"]
+  datacenters = ["mushroom-kingdom"]
 
   type = "batch"
 

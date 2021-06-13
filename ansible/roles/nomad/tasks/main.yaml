@@ -7,22 +7,18 @@
       src: nomad
       dest: /usr/local/bin/nomad
       mode: 0755
-      owner: root
   - name: Ensure data directory exists
     file:
       path: /opt/nomad
       state: directory
-      owner: root
   - name: Ensure Nomad config directory exists
     file:
       path: /etc/nomad.d
       state: directory
-      owner: root
   - name: Render base config
     template:
       src: 00-base.hcl
       dest: /etc/nomad.d/00-base.hcl
-      owner: root
     notify: Restart nomad
 
   # NOTE: theoretically we could have nodes that are both servers and clients,
@@ -34,7 +30,6 @@
     template:
       src: 10-server.hcl
       dest: /etc/nomad.d/10-server.hcl
-      owner: root
     when: is_nomad_server
     notify: Restart nomad
   - name: Remove server config from clients
@@ -47,7 +42,6 @@
     template:
       src: 10-client.hcl
       dest: /etc/nomad.d/10-client.hcl
-      owner: root
     when: is_nomad_server != true
     notify: Restart nomad
   - name: Remove client config from servers
@@ -56,12 +50,10 @@
       state: absent
     when: is_nomad_server
     notify: Restart nomad
-
-  - name: Copy nomad.service
-    copy:
+  - name: Render nomad.service
+    template:
       src: nomad.service
       dest: /etc/systemd/system/nomad.service
-      owner: root
     notify: Restart nomad
 
   # If we've been notified to restart nomad, now is the time to do it...

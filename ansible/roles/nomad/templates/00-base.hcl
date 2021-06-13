@@ -1,4 +1,4 @@
-datacenter = "mushroom-kingdom"
+datacenter = "{{ datacenter }}"
 
 data_dir = "/opt/nomad"
 

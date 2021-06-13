@@ -5,3 +5,10 @@ ui_config {
   enabled = true
 }
 
+cert_file = "/etc/consul.d/cert.pem"
+key_file = "/etc/consul.d/cert-key.pem"
+
+auto_encrypt {
+  allow_tls = true
+}
+

@@ -3,6 +3,11 @@ NOMAD_VERSION := 1.1.1
 CONSUL_VERSION := 1.9.6
 VAULT_VERSION := 1.7.2
 
+DC := mushroom-kingdom
+
+# The certs will begin at 0, so a value of "3" will create 4 certs
+CONSUL_CERT_SERVER_LAST_INDEX := 0
+
 # Install things and make sure we have everything we need
 .PHONY: ensure-env
 ensure-env: ensure-python .venv/bin/ansible
@@ -19,6 +24,8 @@ ensure-python:
 .PHONY: ansible-apply
 ansible-apply: \
 	.venv/bin/ansible \
+	ansible/roles/consul/files/certs/consul-agent-ca.pem \
+	ansible/roles/consul/files/certs/$(DC)-server-consul-$(CONSUL_CERT_SERVER_LAST_INDEX).pem \
 	ansible/roles/consul/files/consul \
 	ansible/roles/consul/vars/main.yaml \
 	ansible/roles/nomad/files/nomad \
@@ -52,9 +59,9 @@ ansible-ping: .venv/bin/ansible
 
 # Clean any auto-generated things or downloaded dependencies
 .PHONY: clean
-clean:
-	rm -rf .venv
-	rm -rf bin
+clean: clean-consul-certs
+	rm -rf .venv/
+	rm -rf bin/
 	rm -f ansible/roles/consul/files/consul
 	rm -f ansible/roles/consul/vars/main.yaml
 	rm -f ansible/roles/nomad/files/nomad
@@ -117,4 +124,30 @@ ansible/roles/vault/files/vault:
 # Generate an encryption key on the fly
 ansible/roles/consul/vars/main.yaml: bin/consul
 	@echo "---\nconsul_encryption_key: $(shell ./bin/consul keygen)" > ansible/roles/consul/vars/main.yaml
+
+.PHONY: clean-consul-certs
+clean-consul-certs:
+	@rm -rf ansible/roles/consul/files/certs
+
+.PHONY: consul-certs
+consul-certs: \
+	ansible/roles/consul/files/certs/$(DC)-server-consul-$(CONSUL_CERT_SERVER_LAST_INDEX).pem \
+
+# Generate a CA on the fly
+ansible/roles/consul/files/certs/consul-agent-ca.pem: bin/consul
+	@echo "Generating Consul certificate authority..."
+	@# In case an old key is still around, clean it up
+	@rm -f ansible/roles/consul/files/consul-agent-ca-key.pem
+	@mkdir -p ansible/roles/consul/files/certs
+	./bin/consul tls ca create
+	mv consul-agent-ca* ansible/roles/consul/files/certs/
+
+ansible/roles/consul/files/certs/consul-agent-ca-key.pem: ansible/roles/consul/files/certs/consul-agent-ca.pem
+
+ansible/roles/consul/files/certs/$(DC)-server-consul-$(CONSUL_CERT_SERVER_LAST_INDEX).pem: ansible/roles/consul/files/certs/consul-agent-ca.pem
+	@echo "Generating Consul server certs up to x-$(CONSUL_CERT_SERVER_LAST_INDEX)..."
+	@cd ansible/roles/consul/files/certs && \
+		for i in $(shell seq 0 $(CONSUL_CERT_SERVER_LAST_INDEX)); do \
+			../../../../../bin/consul tls cert create -server -dc $(DC) > /dev/null; \
+		done
 

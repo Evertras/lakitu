@@ -4,10 +4,13 @@ lakitus:
       ansible_host: 192.168.3.2
       ansible_ssh_private_key_file: ../.vagrant/machines/lakitu/virtualbox/private_key 
       advertise_ip: 192.168.3.2
+      # TODO: this doesn't feel good
+      consul_cert_index: 0
   vars:
     ansible_user: vagrant
     is_consul_server: true
     is_nomad_server: true
+    datacenter: mushroom-kingdom
 
 spineys:
   hosts:
@@ -21,4 +24,5 @@ spineys:
       advertise_ip: 192.168.3.4
   vars:
     ansible_user: vagrant
+    datacenter: mushroom-kingdom
 
