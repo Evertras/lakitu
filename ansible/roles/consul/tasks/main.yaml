@@ -57,7 +57,7 @@
     copy:
       src: "certs/{{ datacenter }}-server-consul-{{ consul_cert_index }}.pem"
       dest: /etc/consul.d/cert.pem
-      mode: 0644
+      mode: 0640
       owner: consul
       group: consul
     when: is_consul_server
@@ -65,7 +65,7 @@
     copy:
       src: "certs/{{ datacenter }}-server-consul-{{ consul_cert_index }}-key.pem"
       dest: /etc/consul.d/cert-key.pem
-      mode: 0644
+      mode: 0640
       owner: consul
       group: consul
     when: is_consul_server

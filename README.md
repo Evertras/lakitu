@@ -103,12 +103,19 @@ we can run things directly on the VM itself.
 Nomad uses to coordinate itself.  Mostly I just want to actually learn to use
 Consul in a sandbox area to see what it can really do.
 
+### Vault
+
+[Hashicorp Vault](https://www.vaultproject.io/) is a secrets management tool
+that we can use for storing and retrieving secrets.  Since we're already going
+full Hashicorp, let's use Vault for easier integration to handle our secrets
+such as credentials.
+
 ## Various TODOs
 
 In no particular order and not an exclusive list, just jotting things down here.
 
 * Pin ansible version in virtualenv
-* Add Vault and put Consul encryption into Vault
+* Put Consul encryption into Vault
 * Add Minio
 * Add some microservices via Nomad + Consul discovery
 * Figure out whether x.service should be in x-server or x (Nomad/Consul)
@@ -116,4 +123,5 @@ In no particular order and not an exclusive list, just jotting things down here.
 * Create multiple lakitus to make a real clustered server plane
 * Play with Consul templating
 * Consul auth for API/CLI from host machine
+* Better system for Consul cert generation, this is currently fragile/bleh
 
