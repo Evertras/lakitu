@@ -67,6 +67,7 @@ clean: clean-consul-certs
 	rm -f ansible/roles/consul/vars/main.yaml
 	rm -f ansible/roles/nomad/files/nomad
 	rm -f ansible/roles/vault/files/vault
+	rm -f ansible/secrets/*.token
 
 # Local pip
 .venv/bin/pip:
