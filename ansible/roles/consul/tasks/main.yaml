@@ -1,8 +1,13 @@
 ---
 - name: Base install
   import_tasks: base-install.yaml
+
 - name: Install certs
   import_tasks: certs.yaml
+
+- name: Apply ACLs
+  import_tasks: acl.yaml
+
 - become: true
   become_user: root
   block:

@@ -24,6 +24,7 @@ ensure-python:
 .PHONY: ansible-apply
 ansible-apply: \
 	.venv/bin/ansible \
+	.venv/lib/python3.9/site-packages/jmespath \
 	ansible/roles/consul/files/certs/consul-agent-ca.pem \
 	ansible/roles/consul/files/certs/$(DC)-server-consul-$(CONSUL_CERT_SERVER_LAST_INDEX).pem \
 	ansible/roles/consul/files/consul \
@@ -74,6 +75,10 @@ clean: clean-consul-certs
 # Local ansible
 .venv/bin/ansible: .venv/bin/pip
 	./.venv/bin/pip install ansible
+
+# Local jmespath
+.venv/lib/python3.9/site-packages/jmespath: .venv/bin/pip
+	./.venv/bin/pip install jmespath
 
 # For now we only support Linux 64 bit and MacOS
 ifeq ($(shell uname), Darwin)

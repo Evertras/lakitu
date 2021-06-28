@@ -1,0 +1,86 @@
+---
+- name: Initialize server token data
+  become: true
+  become_user: root
+  when: is_consul_server
+  block:
+  - name: Check if config file exists
+    stat:
+      path: /etc/consul.d/02-acl-server-tokens.json
+    register: consul_acl_token_config_stat
+  - name: Try to get existing master token
+    when: consul_acl_token_config_stat.stat.exists
+    block:
+      - name: Cat existing config file
+        run_once: yes
+        shell: cat /etc/consul.d/02-acl-server-tokens.json
+        changed_when: false
+        register: consul_acl_token_cat
+      - name: Extract master token
+        changed_when: false
+        set_fact:
+          consul_master_token: "{{ consul_acl_token_cat.stdout | from_json | json_query(master_token_query)}}"
+        vars:
+          master_token_query: acl.tokens.master
+  - name: Generate token if it doesn't exist
+    when: consul_acl_token_config_stat.stat.exists == false
+    changed_when: true
+    run_once: yes
+    set_fact:
+      consul_master_token: "{{ lookup('password', '/dev/null chars=ascii_letters,digits') | to_uuid }}"
+  - name: Save token for local use
+    delegate_to: localhost
+    run_once: yes
+    become: false
+    template:
+      src: consul.token
+      dest: secrets/consul.token
+  - name: Render server token config
+    template:
+      src: 02-acl-server-tokens.json
+      dest: /etc/consul.d/02-acl-server-tokens.json
+      mode: 0640
+      owner: consul
+      group: consul
+    notify: Restart consul
+
+- name: Generate agent tokens
+  become: true
+  become_user: root
+  block:
+  - name: Ensure policy config dir exists
+    file:
+      path: /etc/consul.d/policies/
+      state: directory
+  - name: Write policy
+    template:
+      src: policy-agent.hcl
+      dest: /etc/consul.d/policies/policy-agent.hcl
+      mode: 0640
+      owner: consul
+      group: consul
+  - name: Cat existing config file
+    delegate_to: "{{ groups['lakitus'] | first }}"
+    run_once: yes
+    shell: cat /etc/consul.d/02-acl-server-tokens.json
+    changed_when: false
+    register: consul_acl_token_cat
+  - name: Extract master token
+    changed_when: false
+    set_fact:
+      consul_master_token: "{{ consul_acl_token_cat.stdout | from_json | json_query(master_token_query) }}"
+    vars:
+      master_token_query: acl.tokens.master
+
+- name: Apply ACL configuration and tokens
+  become: true
+  become_user: root
+  block:
+  - name: Install ACL config
+    template:
+      src: 01-acl.hcl
+      dest: /etc/consul.d/01-acl.hcl
+      owner: consul
+      group: consul
+    notify: Restart consul
+

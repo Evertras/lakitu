@@ -47,10 +47,12 @@ make ansible-apply
 # Sanity check Nomad - should see the spineys ready after a short time
 nomad node status
 
-# Sanity check Consul - should see all hosts as members
+# Sanity check Consul - should see all hosts as members using ./ansible/secrets/consul.token
+# via CONSUL_HTTP_TOKEN_FILE set in .envrc
 consul members
 
-# You can check the Consul UI here:
+# You can check the Consul UI at the following address:
+# NOTE: use the generated ACL token from ./ansible/secrets/consul.token
 open http://192.168.3.2:8500/ui
 
 # Try a sample Nomad job - note this uses the values in .envrc.example to point
