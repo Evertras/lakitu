@@ -1,6 +1,6 @@
 acl {
   enabled = true
-  default_policy = "allow"
+  default_policy = "deny"
   enable_token_persistence = true
 }
 

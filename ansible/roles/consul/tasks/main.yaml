@@ -5,17 +5,12 @@
 - name: Install certs
   import_tasks: certs.yaml
 
+- name: Ensure Consul is reloaded/running
+  import_tasks: flush.yaml
+
 - name: Apply ACLs
   import_tasks: acl.yaml
 
-- become: true
-  become_user: root
-  block:
-  - name: Flush handlers
-    meta: flush_handlers
-  - name: Ensure Consul is running
-    systemd:
-      name: consul.service
-      state: started
-      enabled: yes
+- name: Ensure Consul is reloaded/running
+  import_tasks: flush.yaml
 

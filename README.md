@@ -3,6 +3,10 @@
 A playground for tiny virtual cloud things.  Intended to be a personal reference
 and for playing with various cloud-y tools in a repeatable way.
 
+This code is not optimized for long term maintenance.  Instead it focuses on
+doing things the hard way for learning purposes.  So, something like the Consul
+ACL Ansible module isn't used here.
+
 This will not contain any AWS/GCP/Azure/etc things, but rather focuses on tools
 and products that get installed on infrastructure and Ansible to maintain them.
 

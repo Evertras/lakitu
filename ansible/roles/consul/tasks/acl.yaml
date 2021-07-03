@@ -1,4 +1,19 @@
 ---
+- name: Apply base ACL configuration
+  become: true
+  become_user: root
+  block:
+  - name: Install ACL config to server
+    template:
+      src: 01-acl.hcl
+      dest: /etc/consul.d/01-acl.hcl
+      owner: consul
+      group: consul
+    notify: Restart consul
+
+- name: Ensure Consul is reloaded/running
+  import_tasks: flush.yaml
+
 - name: Initialize server token data
   become: true
   become_user: root
@@ -28,6 +43,10 @@
     run_once: yes
     set_fact:
       consul_master_token: "{{ lookup('password', '/dev/null chars=ascii_letters,digits') | to_uuid }}"
+  # NOTE: This is super insecure!  This is just for quick and easy CLI access
+  # from the host machine into the sandbox environment for debugging.  Normally
+  # you would absolutely NOT want to do this, please don't do this in a real
+  # environment or you'll make me sad.
   - name: Save token for local use
     delegate_to: localhost
     run_once: yes
@@ -44,22 +63,11 @@
       group: consul
     notify: Restart consul
 
-- name: Generate agent tokens
+- name: Get master token
   become: true
   become_user: root
-  block:
-  - name: Ensure policy config dir exists
-    file:
-      path: /etc/consul.d/policies/
-      state: directory
-  - name: Write policy
-    template:
-      src: policy-agent.hcl
-      dest: /etc/consul.d/policies/policy-agent.hcl
-      mode: 0640
-      owner: consul
-      group: consul
-  - name: Cat existing config file
+  block: 
+  - name: Cat existing master config file
     delegate_to: "{{ groups['lakitus'] | first }}"
     run_once: yes
     shell: cat /etc/consul.d/02-acl-server-tokens.json
@@ -72,14 +80,91 @@
     vars:
       master_token_query: acl.tokens.master
 
-- name: Apply ACL configuration and tokens
+- name: Ensure Consul is reloaded/running
+  import_tasks: flush.yaml
+
+- name: Get existing ACL data
   become: true
   become_user: root
+  run_once: yes
+  delegate_to: "{{ groups['lakitus'] | first }}"
+  environment:
+    CONSUL_HTTP_TOKEN: "{{ consul_master_token }}"
   block:
-  - name: Install ACL config
+  - name: Get existing ACL token list
+    shell: consul acl token list -format=json
+    register: consul_acl_token_list
+    changed_when: false
+    # There's a small window of time when starting up that the ACL token claims
+    # to be in legacy mode, so let things settle...
+    retries: 10
+    delay: 2
+    until: consul_acl_token_list.stderr.find("The ACL system is currently in legacy mode") == -1
+  - name: Get existing policy list
+    shell: consul acl policy list -format=json
+    register: consul_acl_policy_list
+    changed_when: false
+
+- name: Ensure agent policies exist
+  become: true
+  become_user: root
+  vars:
+    policy_name: "node-{{ inventory_hostname }}"
+  block:
+  - name: Find existing policy from list
+    set_fact:
+      consul_policy_data: "{{ consul_acl_policy_list.stdout | from_json | json_query(existing_policy_query) }}"
+    vars:
+      existing_policy_query: "[?Name=='{{policy_name}}']"
+  - name: Generate agent policies if not exist
+    when: "consul_policy_data | length == 0"
+    block:
+    - name: Generate policy
+      delegate_to: "{{ groups['lakitus'] | first }}"
+      shell: |
+        consul acl policy create -name "{{ policy_name }}" -rules '
+          node "{{ inventory_hostname }}" {
+            policy = "write"
+          }'
+      environment:
+        CONSUL_HTTP_TOKEN: "{{ consul_master_token }}"
+
+- name: Ensure client token config exists
+  become: true
+  become_user: root
+  when: is_consul_server == false
+  vars:
+    token_desc: "{{inventory_hostname}} agent token"
+    policy_name: "node-{{ inventory_hostname }}"
+  block:
+  - name: Find existing token from list
+    set_fact:
+      consul_token_data: "{{ consul_acl_token_list.stdout | from_json | json_query(existing_token_query) }}"
+    vars:
+      existing_token_query: "[?Description=='{{ token_desc }}']"
+  - name: Generate agent token if not exist
+    when: "consul_token_data | length == 0"
+    block:
+      - name: Generate token
+        delegate_to: "{{ groups['lakitus'] | first }}"
+        shell: "consul acl token create -description '{{ token_desc }}' -policy-name {{ policy_name }} -format=json"
+        environment:
+          CONSUL_HTTP_TOKEN: "{{ consul_master_token }}"
+        register: consul_token_create_output
+      - name: Parse token from output
+        set_fact:
+          consul_agent_token: "{{ consul_token_create_output.stdout | from_json | json_query('AccessorID') }}"
+  - name: Set existing token data
+    when: "consul_token_data | length > 0"
+    block:
+      - name: Extract token
+        set_fact:
+          consul_agent_token: "{{ consul_token_data | json_query('[0].AccessorID') }}"
+  - name: Render client token config
     template:
-      src: 01-acl.hcl
-      dest: /etc/consul.d/01-acl.hcl
+      src: 02-acl-client-tokens.json
+      dest: /etc/consul.d/02-acl-client-tokens.json
+      mode: 0640
       owner: consul
       group: consul
     notify: Restart consul
