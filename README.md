@@ -7,6 +7,11 @@ This code is not optimized for long term maintenance.  Instead it focuses on
 doing things the hard way for learning purposes.  So, something like the Consul
 ACL Ansible module isn't used here.
 
+This repository is not a secure way of doing things.  Since this is a playground
+some liberties have been taken with security best practices, such as storing
+master tokens in plaintext files on the host machine for convenience.  This is
+a terrible idea in a real environment!
+
 This will not contain any AWS/GCP/Azure/etc things, but rather focuses on tools
 and products that get installed on infrastructure and Ansible to maintain them.
 
