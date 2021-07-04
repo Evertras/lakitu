@@ -117,6 +117,7 @@
       node "{{ inventory_hostname }}" {
         policy = "write"
       }
+    policy_per_host: true
   include: consul-acl-policy.yaml
 
 - name: Ensure client token config exists
