@@ -135,12 +135,21 @@
     - name: Extract existing ID
       set_fact:
         consul_policy_id: "{{ consul_policy_data | json_query('[0].ID') }}"
+    - name: Get existing policy data
+      delegate_to: "{{ jump_server }}"
+      environment:
+        CONSUL_HTTP_TOKEN: "{{ consul_master_token }}"
+      shell: consul acl policy read -format json -id "{{ consul_policy_id }}"
+      changed_when: false
+      register: existing_consul_policy_output
     - name: Update existing policy
+      when: "(existing_consul_policy_output.stdout | from_json | json_query('Rules')) != policy"
       shell: consul acl policy update -id "{{ consul_policy_id }}" -name '{{ policy_name }}' -rules '{{ policy }}'
       delegate_to: "{{ jump_server }}"
       environment:
         CONSUL_HTTP_TOKEN: "{{ consul_master_token }}"
       notify: Restart consul
+      register: tmp
 
 - name: Ensure client token config exists
   become: true
@@ -176,6 +185,7 @@
         delegate_to: "{{ jump_server }}"
         environment:
           CONSUL_HTTP_TOKEN: "{{ consul_master_token }}"
+        changed_when: false
         shell: "consul acl token read -id {{ consul_accessor_id }} -format json"
         register: consul_token_details_output
       - name: Extract token SecretID
