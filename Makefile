@@ -20,6 +20,12 @@ ensure-python:
 	@test $(shell python -c 'import sys; print(".".join(map(str, sys.version_info[:3])))') == "3.9.5" || \
 		(echo "ERROR: Python version must be 3.9.5, please use pyenv to manage the version properly" && exit 1)
 
+# Recreate the Vagrant boxes to start fresh
+.PHONY: recreate
+recreate:
+	@vagrant destroy -f
+	@vagrant up
+
 # Makes sure all services are installed/running
 .PHONY: ansible-apply
 ansible-apply: \
