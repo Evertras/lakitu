@@ -58,3 +58,4 @@
       src: consul.service
       dest: /etc/systemd/system/consul.service
     notify: Restart consul
+
