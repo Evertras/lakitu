@@ -8,7 +8,7 @@
     CONSUL_HTTP_TOKEN_FILE: /etc/master.token
   vars:
     jump_server: "{{ groups['lakitus'] | first }}"
-  run_once: "{{ not policy_per_host  }}"
+  run_once: "{{ not (policy_per_host | default(false)) }}"
   block:
   - name: Get existing policy list
     shell: consul acl policy list -format=json
