@@ -2,6 +2,6 @@
 - hosts: lakitus, spineys
   roles:
     - consul
-    - nomad
-    - vault
+      #- nomad
+      #- vault
 

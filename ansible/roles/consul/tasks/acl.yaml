@@ -21,14 +21,14 @@
   block:
   - name: Check if config file exists
     stat:
-      path: /etc/consul.d/02-acl-server-tokens.json
+      path: /etc/consul.d/02-acl-token-master.json
     register: consul_acl_token_config_stat
   - name: Try to get existing master token
     when: consul_acl_token_config_stat.stat.exists
     block:
       - name: Cat existing config file
         run_once: yes
-        shell: cat /etc/consul.d/02-acl-server-tokens.json
+        shell: cat /etc/consul.d/02-acl-token-master.json
         changed_when: false
         register: consul_acl_token_cat
       - name: Extract master token
@@ -56,8 +56,8 @@
       dest: secrets/consul.token
   - name: Render server token config
     template:
-      src: 02-acl-server-tokens.json
-      dest: /etc/consul.d/02-acl-server-tokens.json
+      src: 02-acl-token-master.json
+      dest: /etc/consul.d/02-acl-token-master.json
       mode: 0640
       owner: consul
       group: consul
@@ -68,9 +68,9 @@
   become_user: root
   block: 
   - name: Cat existing master config file
-    delegate_to: "{{ groups['lakitus'] | first }}"
+    delegate_to: "{{ jump_server }}"
     run_once: yes
-    shell: cat /etc/consul.d/02-acl-server-tokens.json
+    shell: cat /etc/consul.d/02-acl-token-master.json
     changed_when: false
     register: consul_acl_token_cat
   - name: Extract master token
@@ -87,7 +87,7 @@
   become: true
   become_user: root
   run_once: yes
-  delegate_to: "{{ groups['lakitus'] | first }}"
+  delegate_to: "{{ jump_server }}"
   environment:
     CONSUL_HTTP_TOKEN: "{{ consul_master_token }}"
   block:
@@ -110,6 +110,10 @@
   become_user: root
   vars:
     policy_name: "node-{{ inventory_hostname }}"
+    policy: |
+      node "{{ inventory_hostname }}" {
+        policy = "write"
+      }
   block:
   - name: Find existing policy from list
     set_fact:
@@ -120,19 +124,27 @@
     when: "consul_policy_data | length == 0"
     block:
     - name: Generate policy
-      delegate_to: "{{ groups['lakitus'] | first }}"
+      delegate_to: "{{ jump_server }}"
       shell: |
-        consul acl policy create -name "{{ policy_name }}" -rules '
-          node "{{ inventory_hostname }}" {
-            policy = "write"
-          }'
+        consul acl policy create -name '{{ policy_name }}' -rules '{{ policy }}'
       environment:
         CONSUL_HTTP_TOKEN: "{{ consul_master_token }}"
+  - name: Update agent policies if already exist
+    when: "consul_policy_data | length != 0"
+    block:
+    - name: Extract existing ID
+      set_fact:
+        consul_policy_id: "{{ consul_policy_data | json_query('[0].ID') }}"
+    - name: Update existing policy
+      shell: consul acl policy update -id "{{ consul_policy_id }}" -name '{{ policy_name }}' -rules '{{ policy }}'
+      delegate_to: "{{ jump_server }}"
+      environment:
+        CONSUL_HTTP_TOKEN: "{{ consul_master_token }}"
+      notify: Restart consul
 
 - name: Ensure client token config exists
   become: true
   become_user: root
-  when: is_consul_server == false
   vars:
     token_desc: "{{inventory_hostname}} agent token"
     policy_name: "node-{{ inventory_hostname }}"
@@ -146,24 +158,33 @@
     when: "consul_token_data | length == 0"
     block:
       - name: Generate token
-        delegate_to: "{{ groups['lakitus'] | first }}"
+        delegate_to: "{{ jump_server }}"
         shell: "consul acl token create -description '{{ token_desc }}' -policy-name {{ policy_name }} -format=json"
         environment:
           CONSUL_HTTP_TOKEN: "{{ consul_master_token }}"
         register: consul_token_create_output
       - name: Parse token from output
         set_fact:
-          consul_agent_token: "{{ consul_token_create_output.stdout | from_json | json_query('AccessorID') }}"
+          consul_agent_token: "{{ consul_token_create_output.stdout | from_json | json_query('SecretID') }}"
   - name: Set existing token data
     when: "consul_token_data | length > 0"
     block:
-      - name: Extract token
+      - name: Extract token AccessorID
         set_fact:
-          consul_agent_token: "{{ consul_token_data | json_query('[0].AccessorID') }}"
-  - name: Render client token config
+          consul_accessor_id: "{{ consul_token_data | json_query('[0].AccessorID') }}"
+      - name: Get token details
+        delegate_to: "{{ jump_server }}"
+        environment:
+          CONSUL_HTTP_TOKEN: "{{ consul_master_token }}"
+        shell: "consul acl token read -id {{ consul_accessor_id }} -format json"
+        register: consul_token_details_output
+      - name: Extract token SecretID
+        set_fact:
+          consul_agent_token: "{{ consul_token_details_output.stdout | from_json | json_query('SecretID') }}"
+  - name: Render agent token config
     template:
-      src: 02-acl-client-tokens.json
-      dest: /etc/consul.d/02-acl-client-tokens.json
+      src: 02-acl-token-agent.json
+      dest: /etc/consul.d/02-acl-token-agent.json
       mode: 0640
       owner: consul
       group: consul
