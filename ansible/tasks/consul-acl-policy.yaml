@@ -1,4 +1,4 @@
-# Required vars: policy, policy_name, policy_per_host
+# Required vars: policy, policy_name, policy_per_host (default false)
 ---
 - name: Ensure Consul ACL policy exists
   become: true
