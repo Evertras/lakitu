@@ -1,0 +1,4 @@
+---
+- name: Hello
+  debug:
+    msg: Ok
