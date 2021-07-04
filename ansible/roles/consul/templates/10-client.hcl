@@ -1,3 +1,3 @@
-#auto_encrypt {
-  #tls = true
-#}
+auto_encrypt {
+  tls = true
+}

@@ -7,7 +7,7 @@ retry_join = ["{{ hostvars['lakitu'].advertise_ip }}"]
 
 bind_addr = "{{ advertise_ip }}"
 
-#ca_file = "/etc/consul.d/ca.pem"
+ca_file = "/etc/consul.d/ca.pem"
 
 verify_incoming = false
 verify_outgoing = false
