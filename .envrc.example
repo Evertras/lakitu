@@ -10,3 +10,6 @@ export NOMAD_ADDR=http://192.168.3.2:4646
 # Point Consul at the main server
 export CONSUL_HTTP_ADDR=http://192.168.3.2:8500
 
+# Use the generated HTTP token
+export CONSUL_HTTP_TOKEN_FILE=/home/abcdef/lakitu/ansible/secrets/consul.token
+

@@ -3,6 +3,15 @@
 A playground for tiny virtual cloud things.  Intended to be a personal reference
 and for playing with various cloud-y tools in a repeatable way.
 
+This code is not optimized for long term maintenance.  Instead it focuses on
+doing things the hard way for learning purposes.  So, something like the Consul
+ACL Ansible module isn't used here.
+
+This repository is not a secure way of doing things.  Since this is a playground
+some liberties have been taken with security best practices, such as storing
+master tokens in plaintext files on the host machine for convenience.  This is
+a terrible idea in a real environment!
+
 This will not contain any AWS/GCP/Azure/etc things, but rather focuses on tools
 and products that get installed on infrastructure and Ansible to maintain them.
 
@@ -47,10 +56,12 @@ make ansible-apply
 # Sanity check Nomad - should see the spineys ready after a short time
 nomad node status
 
-# Sanity check Consul - should see all hosts as members
+# Sanity check Consul - should see all hosts as members using ./ansible/secrets/consul.token
+# via CONSUL_HTTP_TOKEN_FILE set in .envrc
 consul members
 
-# You can check the Consul UI here:
+# You can check the Consul UI at the following address:
+# NOTE: use the generated ACL token from ./ansible/secrets/consul.token
 open http://192.168.3.2:8500/ui
 
 # Try a sample Nomad job - note this uses the values in .envrc.example to point

@@ -10,7 +10,7 @@
   - name: Create consul user
     user:
       name: consul
-      home: /etc/consul.d/
+      home: /home/consul
       shell: /bin/false
       system: yes
   - name: Ensure config directory exists
@@ -58,3 +58,4 @@
       src: consul.service
       dest: /etc/systemd/system/consul.service
     notify: Restart consul
+

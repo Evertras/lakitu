@@ -1,0 +1,48 @@
+# Required vars: policy, policy_name, policy_per_host (default false)
+---
+- name: Ensure Consul ACL policy exists
+  become: true
+  become_user: root
+  environment:
+    # TODO: Maybe an ACL-only token here?  For now, just cheat
+    CONSUL_HTTP_TOKEN_FILE: /etc/master.token
+  vars:
+    jump_server: "{{ groups['lakitus'] | first }}"
+  run_once: "{{ not (policy_per_host | default(false)) }}"
+  block:
+  - name: Get existing policy list
+    shell: consul acl policy list -format=json
+    register: consul_acl_policy_list
+    delegate_to: "{{ jump_server }}"
+    run_once: yes
+    changed_when: false
+  - name: Find existing policy from list
+    set_fact:
+      consul_policy_data: "{{ consul_acl_policy_list.stdout | from_json | json_query(existing_policy_query) }}"
+    vars:
+      existing_policy_query: "[?Name=='{{policy_name}}']"
+  - name: Generate policy if not exist
+    when: "consul_policy_data | length == 0"
+    block:
+    - name: Generate policy
+      delegate_to: "{{ jump_server }}"
+      shell: |
+        consul acl policy create -name '{{ policy_name }}' -rules '{{ policy }}'
+  - name: Update agent policies if already exist
+    when: "consul_policy_data | length != 0"
+    block:
+    - name: Extract existing ID
+      set_fact:
+        consul_policy_id: "{{ consul_policy_data | json_query('[0].ID') }}"
+    - name: Get existing policy data
+      delegate_to: "{{ jump_server }}"
+      shell: consul acl policy read -format json -id "{{ consul_policy_id }}"
+      changed_when: false
+      register: existing_consul_policy_output
+    - name: Update existing policy
+      when: "(existing_consul_policy_output.stdout | from_json | json_query('Rules')) != policy"
+      shell: consul acl policy update -id "{{ consul_policy_id }}" -name '{{ policy_name }}' -rules '{{ policy }}'
+      delegate_to: "{{ jump_server }}"
+      notify: Restart consul
+      register: tmp
+

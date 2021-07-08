@@ -20,10 +20,17 @@ ensure-python:
 	@test $(shell python -c 'import sys; print(".".join(map(str, sys.version_info[:3])))') == "3.9.5" || \
 		(echo "ERROR: Python version must be 3.9.5, please use pyenv to manage the version properly" && exit 1)
 
+# Recreate the Vagrant boxes to start fresh
+.PHONY: recreate
+recreate:
+	@vagrant destroy -f
+	@vagrant up
+
 # Makes sure all services are installed/running
 .PHONY: ansible-apply
 ansible-apply: \
 	.venv/bin/ansible \
+	.venv/lib/python3.9/site-packages/jmespath \
 	ansible/roles/consul/files/certs/consul-agent-ca.pem \
 	ansible/roles/consul/files/certs/$(DC)-server-consul-$(CONSUL_CERT_SERVER_LAST_INDEX).pem \
 	ansible/roles/consul/files/consul \
@@ -66,6 +73,7 @@ clean: clean-consul-certs
 	rm -f ansible/roles/consul/vars/main.yaml
 	rm -f ansible/roles/nomad/files/nomad
 	rm -f ansible/roles/vault/files/vault
+	rm -f ansible/secrets/*.token
 
 # Local pip
 .venv/bin/pip:
@@ -74,6 +82,10 @@ clean: clean-consul-certs
 # Local ansible
 .venv/bin/ansible: .venv/bin/pip
 	./.venv/bin/pip install ansible
+
+# Local jmespath
+.venv/lib/python3.9/site-packages/jmespath: .venv/bin/pip
+	./.venv/bin/pip install jmespath
 
 # For now we only support Linux 64 bit and MacOS
 ifeq ($(shell uname), Darwin)
