@@ -2,7 +2,3 @@
 - hosts: lakitus, spineys
   roles:
     - users
-    - consul
-    - nomad
-    - vault
-

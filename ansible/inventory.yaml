@@ -11,6 +11,14 @@ lakitus:
     is_consul_server: true
     is_nomad_server: true
     datacenter: mushroom-kingdom
+    managed_groups:
+      - name: boss
+      - name: enemy
+    managed_users:
+      - name: bowser
+        groups:
+          - boss
+          - enemy
 
 spineys:
   hosts:
@@ -25,4 +33,25 @@ spineys:
   vars:
     ansible_user: vagrant
     datacenter: mushroom-kingdom
+    managed_groups:
+      - name: boss
+      - name: hero
+      - name: enemy
+    managed_users:
+      - name: bowser
+        groups:
+          - boss
+          - enemy
+      - name: mario
+        groups:
+          - hero
+      - name: luigi
+        groups:
+          - hero
+      - name: peach
+        groups:
+          - hero
+      - name: wario
+        groups:
+          - enemy
 

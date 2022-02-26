@@ -110,6 +110,18 @@ that we can use for storing and retrieving secrets.  Since we're already going
 full Hashicorp, let's use Vault for easier integration to handle our secrets
 such as credentials.
 
+## Users
+
+A sample set of users and user management is added.  The intent is for the users
+to provide a public key, or they can have their keys generated.  The public keys
+are stored in git, and the private keys are gitignored.  This means that likely
+you will have to regenerate the keys if you want to actually use them.  To do
+this, run:
+
+```bash
+make regen-keys
+```
+
 ## Various TODOs
 
 In no particular order and not an exclusive list, just jotting things down here.

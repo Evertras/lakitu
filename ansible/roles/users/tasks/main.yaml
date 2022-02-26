@@ -1,0 +1,21 @@
+---
+- become: true
+  become_user: root
+  block:
+    - name: Ensure groups exist
+      group:
+        name: "{{ item.name }}"
+        state: "{{ item.state | default('present') }}"
+      with_items: "{{ managed_groups }}"
+    - name: Ensure users exist
+      user:
+        name: "{{ item.name }}"
+        state: "{{ item.state | default('present') }}"
+      with_items: "{{ managed_users }}"
+    - name: Apply authorized keys
+      authorized_key:
+        user: "{{ item.name }}"
+        key: "{{ lookup('file', 'keys/public/' + item.name + '.pub') }}"
+        exclusive: true
+      with_items: "{{ managed_users }}"
+      when: (item.state | default('present')) != 'absent'

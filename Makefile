@@ -13,13 +13,6 @@ CONSUL_CERT_SERVER_LAST_INDEX := 0
 ensure-env: ensure-python .venv/bin/ansible
 	@echo Ready to go!
 
-# Make sure "python" points to 3.9.5 version to make sure pyenv is in effect
-# and that we have the latest Python for the latest Ansible version to use
-.PHONY: ensure-python
-ensure-python:
-	@test $(shell python -c 'import sys; print(".".join(map(str, sys.version_info[:3])))') == "3.9.5" || \
-		(echo "ERROR: Python version must be 3.9.5, please use pyenv to manage the version properly" && exit 1)
-
 # Makes sure all services are installed/running
 .PHONY: ansible-apply
 ansible-apply: \
@@ -35,6 +28,22 @@ ansible-apply: \
 	bin/vault
 
 	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml playbook.yaml
+
+# Apply users
+.PHONY: users
+users: .venv/bin/ansible
+	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml users.yaml
+
+# Generate missing user keys
+.PHONY: user-keys
+user-keys: .venv/bin/ansible
+	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml user-keys.yaml
+
+# Regenerate all user keys, for testing/dev purposes
+.PHONY: user-keys
+regen-keys: .venv/bin/ansible
+	@rm ansible/keys/public/*.pub
+	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml user-keys.yaml
 
 # Forces a restart of all the Nomad services
 .PHONY: ansible-restart-nomad
@@ -151,3 +160,9 @@ ansible/roles/consul/files/certs/$(DC)-server-consul-$(CONSUL_CERT_SERVER_LAST_I
 			../../../../../bin/consul tls cert create -server -dc $(DC) > /dev/null; \
 		done
 
+# Make sure "python" points to 3.9.5 version to make sure pyenv is in effect
+# and that we have the latest Python for the latest Ansible version to use
+.PHONY: ensure-python
+ensure-python:
+	@test $(shell python -c 'import sys; print(".".join(map(str, sys.version_info[:3])))') == "3.9.5" || \
+		(echo "ERROR: Python version must be 3.9.5, please use pyenv to manage the version properly" && exit 1)

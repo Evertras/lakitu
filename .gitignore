@@ -12,3 +12,5 @@ ansible/roles/nomad/files/nomad.zip
 ansible/roles/vault/files/vault
 ansible/roles/vault/files/vault.zip
 
+ansible/keys/private
+
