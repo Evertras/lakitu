@@ -119,7 +119,18 @@ you will have to regenerate the keys if you want to actually use them.  To do
 this, run:
 
 ```bash
+# Regenerate all user keys
 make regen-keys
+
+# Apply the keys and user status
+make users
+```
+
+To SSH in as one of the users, run:
+
+```bash
+# SSH into spiney1 as Mario
+ssh -i ansible/keys/public/mario.pub 192.168.56.3
 ```
 
 ## Various TODOs

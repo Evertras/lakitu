@@ -42,7 +42,7 @@ user-keys: .venv/bin/ansible
 # Regenerate all user keys, for testing/dev purposes
 .PHONY: user-keys
 regen-keys: .venv/bin/ansible
-	@rm ansible/keys/public/*.pub
+	@rm -f ansible/keys/public/*.pub
 	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml user-keys.yaml
 
 # Forces a restart of all the Nomad services
