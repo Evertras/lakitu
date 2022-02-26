@@ -130,7 +130,7 @@ To SSH in as one of the users, run:
 
 ```bash
 # SSH into spiney1 as Mario
-ssh -i ansible/keys/public/mario.pub 192.168.56.3
+ssh -i ansible/keys/private/mario mario@192.168.56.3
 ```
 
 ## Various TODOs
