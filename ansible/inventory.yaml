@@ -16,9 +16,7 @@ lakitus:
       - name: enemy
     managed_users:
       - name: bowser
-        groups:
-          - boss
-          - enemy
+        groups: boss, enemy
 
 spineys:
   hosts:
@@ -39,19 +37,12 @@ spineys:
       - name: enemy
     managed_users:
       - name: bowser
-        groups:
-          - boss
-          - enemy
+        groups: boss, enemy
       - name: mario
-        groups:
-          - hero
+        groups: hero
       - name: luigi
-        groups:
-          - hero
+        groups: hero
       - name: peach
-        groups:
-          - hero
+        groups: hero
       - name: wario
-        groups:
-          - enemy
-
+        groups: enemy 

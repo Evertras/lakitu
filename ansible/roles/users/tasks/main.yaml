@@ -11,6 +11,7 @@
       user:
         name: "{{ item.name }}"
         state: "{{ item.state | default('present') }}"
+        groups: "{{ item.groups }}"
       with_items: "{{ managed_users }}"
     - name: Apply authorized keys
       authorized_key:

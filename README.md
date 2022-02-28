@@ -113,10 +113,16 @@ such as credentials.
 ## Users
 
 A sample set of users and user management is added.  The intent is for the users
-to provide a public key, or they can have their keys generated.  The public keys
-are stored in git, and the private keys are gitignored.  This means that likely
-you will have to regenerate the keys if you want to actually use them.  To do
-this, run:
+to provide a public key, or they can have their keys generated.  Since this is
+just a demo, the keys must be generated.  In a real setup, the registered public
+keys should be checked into git, and the private keys should be stored
+elsewhere.
+
+This setup uses the user name to look for the SSH key.  Only the public key must
+exist for the playbook to be run, and it must be placed in
+`ansible/keys/public/<username>.pub`.  The private keys are generated on the fly
+purely for demonstration purposes and do not necessarily need to live in the
+private folder.
 
 ```bash
 # Regenerate all user keys
