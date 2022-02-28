@@ -1,0 +1,9 @@
+---
+is_consul_server: true
+is_nomad_server: true
+managed_groups:
+  - name: boss
+  - name: enemy
+managed_users:
+  - name: bowser
+    groups: boss, enemy

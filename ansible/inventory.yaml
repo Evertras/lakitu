@@ -1,3 +1,4 @@
+---
 lakitus:
   hosts:
     lakitu:
@@ -6,18 +7,6 @@ lakitus:
       advertise_ip: 192.168.56.2
       # TODO: this doesn't feel good
       consul_cert_index: 0
-  vars:
-    ansible_user: vagrant
-    is_consul_server: true
-    is_nomad_server: true
-    datacenter: mushroom-kingdom
-    managed_groups:
-      - name: boss
-      - name: enemy
-    managed_users:
-      - name: bowser
-        groups: boss, enemy
-
 spineys:
   hosts:
     spiney1:
@@ -28,21 +17,3 @@ spineys:
       ansible_host: 192.168.56.4
       ansible_ssh_private_key_file: ../.vagrant/machines/spiney2/virtualbox/private_key 
       advertise_ip: 192.168.56.4
-  vars:
-    ansible_user: vagrant
-    datacenter: mushroom-kingdom
-    managed_groups:
-      - name: boss
-      - name: hero
-      - name: enemy
-    managed_users:
-      - name: bowser
-        groups: boss, enemy
-      - name: mario
-        groups: hero
-      - name: luigi
-        groups: hero
-      - name: peach
-        groups: hero
-      - name: wario
-        groups: enemy 

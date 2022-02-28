@@ -1,0 +1,16 @@
+---
+managed_groups:
+  - name: boss
+  - name: hero
+  - name: enemy
+managed_users:
+  - name: bowser
+    groups: boss, enemy
+  - name: mario
+    groups: hero
+  - name: luigi
+    groups: hero
+  - name: peach
+    groups: hero
+  - name: wario
+    groups: enemy 
