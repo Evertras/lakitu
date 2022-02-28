@@ -40,7 +40,7 @@ user-keys: .venv/bin/ansible
 	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml user-keys.yaml
 
 # Regenerate all user keys, for testing/dev purposes
-.PHONY: user-keys
+.PHONY: regen-keys
 regen-keys: .venv/bin/ansible
 	@rm -f ansible/keys/public/*.pub
 	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml user-keys.yaml
@@ -164,5 +164,5 @@ ansible/roles/consul/files/certs/$(DC)-server-consul-$(CONSUL_CERT_SERVER_LAST_I
 # and that we have the latest Python for the latest Ansible version to use
 .PHONY: ensure-python
 ensure-python:
-	@test $(shell python -c 'import sys; print(".".join(map(str, sys.version_info[:3])))') == "3.9.5" || \
+	@test $(shell python -c 'import sys; print(".".join(map(str, sys.version_info[:3])))') = "3.9.5" || \
 		(echo "ERROR: Python version must be 3.9.5, please use pyenv to manage the version properly" && exit 1)
