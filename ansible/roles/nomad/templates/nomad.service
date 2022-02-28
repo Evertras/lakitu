@@ -14,7 +14,7 @@ After=consul.service
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStart=/usr/local/bin/nomad agent -config /etc/nomad.d
 KillMode=process
-Restart=on-failure
+Restart=always
 RestartSec=1
 
 [Install]
