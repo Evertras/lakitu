@@ -26,30 +26,50 @@
   # Even though this is a toy sandbox we're going to take this advice and make
   # a server and client mutually exclusive.  We include the removal step to be
   # safe in case something is rendered accidentally, or if a node switches roles.
-  - name: Render server config
-    template:
-      src: 10-server.hcl
-      dest: /etc/nomad.d/10-server.hcl
+  - name: Nomad Server
     when: is_nomad_server
-    notify: Restart nomad
-  - name: Remove server config from clients
-    file:
-      path: /etc/nomad.d/10-server.hcl
-      state: absent
+    block:
+    - name: Render server config
+      template:
+        src: 10-server.hcl
+        dest: /etc/nomad.d/10-server.hcl
+      notify: Restart nomad
+    - name: Remove client config from servers
+      file:
+        path: /etc/nomad.d/10-client.hcl
+        state: absent
+      notify: Restart nomad
+  - name: Nomad Client
     when: is_nomad_server != true
-    notify: Restart nomad
-  - name: Render client config
-    template:
-      src: 10-client.hcl
-      dest: /etc/nomad.d/10-client.hcl
-    when: is_nomad_server != true
-    notify: Restart nomad
-  - name: Remove client config from servers
-    file:
-      path: /etc/nomad.d/10-client.hcl
-      state: absent
-    when: is_nomad_server
-    notify: Restart nomad
+    block:
+    - name: Remove server config from clients
+      file:
+        path: /etc/nomad.d/10-server.hcl
+        state: absent
+      notify: Restart nomad
+    - name: Render client config
+      template:
+        src: 10-client.hcl
+        dest: /etc/nomad.d/10-client.hcl
+      notify: Restart nomad
+    - name: Ensure plugin directory exists
+      file:
+        path: /opt/nomad/plugins
+        state: directory
+    - name: Install generic device plugin
+      unarchive:
+        src: https://github.com/Evertras/nomad-generic-device-plugin/releases/download/v{{ generic_device_plugin_version }}/nomad-generic-device-plugin_{{ generic_device_plugin_version }}_linux_amd64.tar.gz
+        dest: /opt/nomad/plugins/
+        include:
+          - generic-device
+        remote_src: yes
+      notify: Restart nomad
+    - name: Render device config
+      template:
+        src: 20-device.hcl
+        dest: /etc/nomad.d/20-device.hcl
+      notify: Restart nomad
+
   - name: Render nomad.service
     template:
       src: nomad.service

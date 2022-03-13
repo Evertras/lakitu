@@ -14,6 +14,11 @@ job "hello" {
 
         args = ["Hello", "world!"]
       }
+
+      resources {
+        # Reserve a Doyota Mius to drive around with for the duration of this task
+        device "doyota/car/mius" {}
+      }
     }
 
     task "hostname" {
