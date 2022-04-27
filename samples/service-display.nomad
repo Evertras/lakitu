@@ -4,7 +4,7 @@ job "service-display" {
   type = "service"
 
   group "display-nginx" {
-    count = 2
+    count = 4
 
     network {
       mode = "host"
