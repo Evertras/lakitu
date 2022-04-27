@@ -7,8 +7,9 @@ job "service-display" {
     count = 2
 
     network {
+      mode = "host"
       port "http" {
-        static = 80
+        to = 80
       }
     }
 
