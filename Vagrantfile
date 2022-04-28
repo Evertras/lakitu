@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
   # Use the bento version because it's considered friendlier for multiple
   # providers compared to the "official" ubuntu version
-  config.vm.box = "bento/ubuntu-20.10"
+  config.vm.box = "bento/ubuntu-20.04"
 
   # This is the main host where we run servers/etc
   config.vm.define "lakitu", primary: true do |lakitu|

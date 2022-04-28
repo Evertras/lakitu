@@ -1,8 +1,16 @@
 ---
 - hosts: lakitus, spineys
+  tasks:
+    - name: Update apt cache
+      become: true
+      apt:
+        update_cache: yes
+        cache_valid_time: 86400
+- hosts: lakitus, spineys
   roles:
     - users
+    - role: geerlingguy.docker
+      become: true
     - consul
     - nomad
     - vault
-
