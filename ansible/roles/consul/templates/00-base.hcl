@@ -12,4 +12,3 @@ ca_file = "/etc/consul.d/ca.pem"
 verify_incoming = true
 verify_outgoing = true
 verify_server_hostname = true
-

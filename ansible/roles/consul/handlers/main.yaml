@@ -5,4 +5,12 @@
     name: consul.service
     daemon_reload: yes
     state: restarted
+- name: Restart systemd-resolved
+  become: true
+  systemd:
+    name: systemd-resolved.service
+    state: restarted
+- name: Save iptables
+  become: true
+  command: iptables-save
 

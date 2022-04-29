@@ -13,4 +13,5 @@
       name: consul.service
       state: started
       enabled: yes
-
+- name: Configure DNS
+  import_tasks: dns.yaml

@@ -88,6 +88,9 @@ but we're actively choosing not to use it.  Instead we want to manually set up
 our Ansible purely for practice/simplicity.  The point is to play with Ansible
 as if we were targeting regular machines that live somewhere else.
 
+Additionally, Ansible Galaxy is used more sparingly than it might otherwise be,
+because the point is to explore writing custom Ansible roles.
+
 Ansible is installed via the Makefile using a Python virtual environment.
 
 ### Nomad

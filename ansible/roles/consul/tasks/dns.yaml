@@ -1,0 +1,30 @@
+---
+- name: Install resolved DNS config
+  become: true
+  block:
+    - name: Ensure resolved.conf.d dir exists
+      file:
+        path: /etc/systemd/resolved.conf.d
+        state: directory
+        mode: 0755
+    - name: Install consul DNS conf
+      copy:
+        src: consul-dns.conf
+        dest: /etc/systemd/resolved.conf.d/consul-dns.conf
+      notify: Restart systemd-resolved
+    - name: Configure iptables for dns
+      iptables:
+        protocol: "{{ item }}"
+        match: "{{ item }}"
+        chain: OUTPUT
+        table: nat
+        destination: localhost
+        jump: REDIRECT
+        destination_port: 53
+        to_ports: 8600
+      loop:
+        - tcp
+        - udp
+      notify: Save iptables
+      # iptables --table nat --append OUTPUT --destination localhost --protocol udp --match udp --dport 53 --jump REDIRECT --to-ports 8600
+
