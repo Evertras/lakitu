@@ -26,5 +26,4 @@
         - tcp
         - udp
       notify: Save iptables
-      # iptables --table nat --append OUTPUT --destination localhost --protocol udp --match udp --dport 53 --jump REDIRECT --to-ports 8600
 
