@@ -1,4 +1,5 @@
-job "proxy" {
+# TODO: Use better interrupt, filter based on metadata
+job "consul-reverse-proxy" {
   datacenters = ["mushroom-kingdom"]
 
   type = "service"
