@@ -16,13 +16,16 @@ job "service-display" {
     service {
       name = "service-displayer"
       port = "http"
+      tags = [
+        "exposed",
+      ]
     }
 
     task "webserver" {
       driver = "docker"
 
       config {
-        image = "nginx"
+        image = "nginx:1.23.0-alpine"
         ports = ["http"]
         volumes = [
           "local/:/usr/share/nginx/html:ro"

@@ -1,4 +1,4 @@
-# TODO: Use better interrupt, filter based on metadata
+# TODO: Use better interrupt
 job "consul-reverse-proxy" {
   datacenters = ["mushroom-kingdom"]
 
@@ -15,7 +15,7 @@ job "consul-reverse-proxy" {
       }
     }
 
-    task "webserver" {
+    task "proxy" {
       driver = "docker"
 
       config {
@@ -55,7 +55,14 @@ http {
 
     #gzip  on;
 
+    server {
+      listen 80 default_server;
+      server_name _;
+      return 404;
+    }
+
 {{ range services }}
+{{ if .Tags | contains "exposed" }}
     upstream {{ .Name }} {
 {{ range service .Name }}
       server {{ .Address }}:{{ .Port }};
@@ -69,6 +76,7 @@ http {
         proxy_pass http://{{ .Name }};
       }
     }
+{{ end }}
 {{ end }}
 }
 
