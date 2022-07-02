@@ -55,12 +55,29 @@ http {
 
     #gzip  on;
 
+    # Default to 404 if nothing matches
     server {
       listen 80 default_server;
       server_name _;
       return 404;
     }
 
+    # Expose Nomad itself for funsies/playing
+    upstream nomad {
+{{ range service "nomad" }}
+      server {{ .Address }}:{{ .Port }};
+{{ end }}
+    }
+
+    server {
+      listen 80;
+      server_name nomad.mushroom-kingdom;
+      location / {
+        proxy_pass http://nomad;
+      }
+    }
+
+    # Expose all services with the "exposed" tag
 {{ range services }}
 {{ if .Tags | contains "exposed" }}
     upstream {{ .Name }} {
