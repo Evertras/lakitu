@@ -64,7 +64,7 @@ http {
 
     server {
       listen 80;
-      server_name {{ .Name }}.mushroom-kingdom.local;
+      server_name {{ .Name }}.mushroom-kingdom;
       location / {
         proxy_pass http://{{ .Name }};
       }
