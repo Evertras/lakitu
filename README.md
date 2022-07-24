@@ -100,6 +100,9 @@ and allows us to connect our machines together in a cluster where we can run
 various things.  This is nicer than Kubernetes in this particular case because
 we can run things directly on the VM itself.
 
+[Wander](https://github.com/robinovitch61/wander) is added as a quick TUI
+interface.
+
 ### Consul
 
 [Hashicorp Consul](https://www.consul.io) is service mesh, networking thing that
