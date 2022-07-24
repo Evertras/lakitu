@@ -25,6 +25,7 @@ ansible-apply: \
 	ansible/roles/vault/files/vault \
 	bin/consul \
 	bin/nomad \
+	bin/wander \
 	bin/vault
 
 	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml playbook.yaml
@@ -114,6 +115,13 @@ bin/vault:
 		https://releases.hashicorp.com/vault/$(VAULT_VERSION)/vault_$(VAULT_VERSION)_$(OS_URL)_amd64.zip
 	@cd bin && unzip vault.zip
 	@rm bin/vault.zip
+
+# Local Wander
+bin/wander:
+	@mkdir -p bin
+	curl -L \
+		https://github.com/robinovitch61/wander/releases/download/v0.6.0/wander_0.6.0_Darwin_all.tar.gz | \
+		tar -xf - -C bin wander
 
 # Nomad for the Linux VMs
 ansible/roles/nomad/files/nomad:
