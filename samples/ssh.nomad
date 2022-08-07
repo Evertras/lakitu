@@ -3,7 +3,7 @@ job "ssh-sample" {
 
   type = "batch"
 
-  group "hello" {
+  group "ssh" {
     count = 1
 
     network {
