@@ -86,6 +86,7 @@ rm -rf /opt/ssh-access/keys/$SSH_USERNAME.key*
 
         data = <<EOF
 ListenAddress {{ env "NOMAD_ADDR_ssh" }}
+
 # Only allow SSH access
 PasswordAuthentication no
 
