@@ -85,12 +85,13 @@ rm -rf /opt/ssh-access/keys/$SSH_USERNAME.key*
         destination = "sshd.config"
 
         data = <<EOF
-# Only allow our dynamically provisioned user through this server
-match User ssh-{{ env "NOMAD_JOB_NAME" }}
-  AuthorizedKeysFile /opt/ssh-access/keys/ssh-{{ env "NOMAD_JOB_NAME" }}.key.pub
 ListenAddress {{ env "NOMAD_ADDR_ssh" }}
 # Only allow SSH access
 PasswordAuthentication no
+
+# Only allow our dynamically provisioned user through this server
+match User ssh-{{ env "NOMAD_JOB_NAME" }}
+  AuthorizedKeysFile /opt/ssh-access/keys/ssh-{{ env "NOMAD_JOB_NAME" }}.key.pub
         EOF
       }
 
