@@ -2,3 +2,4 @@
 is_nomad_server: false
 generic_device_plugin_version: "0.1.1-alpha"
 nomad_network_interface: eth1
+nomad_raw_exec_enabled: false
