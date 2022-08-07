@@ -85,8 +85,11 @@ rm -rf /opt/ssh-access/keys/$SSH_USERNAME.key*
         destination = "sshd.config"
 
         data = <<EOF
-AuthorizedKeysFile /opt/ssh-access/keys/%u.key.pub
+# Only allow our dynamically provisioned user through this server
+match User ssh-{{ env "NOMAD_JOB_NAME" }}
+  AuthorizedKeysFile /opt/ssh-access/keys/ssh-{{ env "NOMAD_JOB_NAME" }}.key.pub
 ListenAddress {{ env "NOMAD_ADDR_ssh" }}
+# Only allow SSH access
 PasswordAuthentication no
         EOF
       }
@@ -110,11 +113,16 @@ echo "TODO: This should use Vault's SSH stuff so we can auth with Vault instead,
 echo "this is NOT currently secure... just a proof of concept!"
 echo "--------------------------------------------------------------------------"
 echo "Run the following commands to fetch the key, save it locally, and connect:"
+echo ""
 echo "nomad alloc fs ${NOMAD_ALLOC_ID} ssh-sandbox/connect.key > demokey.key"
 echo "chmod 0600 demokey.key"
 echo "ssh $SSH_USERNAME@${NOMAD_IP_ssh} -p ${NOMAD_PORT_ssh} -i demokey.key"
 
-# Actually run
+# Actually run - we need '-d' to keep in foreground, this needs a lot of improvement!
+# Potential other approaches include adding the user/port to the main sshd daemon
+# service as part of /etc/ssh/sshd_config.d/<job> and reloading the daemon, but
+# this requires that all sshd daemons are configured to work with this setup...
+# and potential issues with cleanup compared to this approach.
 /usr/sbin/sshd -d -f sshd.config
           EOF
         ]
