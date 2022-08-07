@@ -15,3 +15,5 @@ ansible/roles/vault/files/vault.zip
 ansible/keys/private
 ansible/keys/public
 
+# From SSH demo job
+demokey.key
