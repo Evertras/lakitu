@@ -6,6 +6,19 @@ and for playing with various cloud-y tools in a repeatable way.
 This will not contain any AWS/GCP/Azure/etc things, but rather focuses on tools
 and products that get installed on infrastructure and Ansible to maintain them.
 
+```
+        ------------
+        | <server> |
+        | lakitu   |
+        ------------
+       /            \
+      /              \
+ ------------   ------------
+ | <client> |   | <client> |
+ | spiney1  |   | spiney2  |
+ ------------   ------------
+```
+
 ## Requirements
 
 The following must be explicitly installed on the host machine.
