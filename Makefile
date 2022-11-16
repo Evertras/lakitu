@@ -1,7 +1,8 @@
 # Which versions of various tools to both put on the machines and have locally
-NOMAD_VERSION := 1.1.1
+NOMAD_VERSION := 1.3.5
 CONSUL_VERSION := 1.9.6
 VAULT_VERSION := 1.7.2
+WANDER_VERSION := 0.8.1
 
 DC := mushroom-kingdom
 
@@ -116,11 +117,18 @@ bin/vault:
 	@cd bin && unzip vault.zip
 	@rm bin/vault.zip
 
+# For now we only support Linux 64 bit and MacOS
+ifeq ($(shell uname), Darwin)
+WANDER_URL_SUFFIX := Darwin_all
+else
+WANDER_URL_SUFFIX := Linux_x86_64
+endif
+
 # Local Wander
 bin/wander:
 	@mkdir -p bin
 	curl -L \
-		https://github.com/robinovitch61/wander/releases/download/v0.6.0/wander_0.6.0_Darwin_all.tar.gz | \
+		https://github.com/robinovitch61/wander/releases/download/v$(WANDER_VERSION)/wander_$(WANDER_VERSION)_$(WANDER_URL_SUFFIX).tar.gz | \
 		tar -xzf - -C bin wander
 
 # Nomad for the Linux VMs

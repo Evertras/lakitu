@@ -7,6 +7,7 @@
       src: nomad
       dest: /usr/local/bin/nomad
       mode: 0755
+    notify: Restart nomad
   - name: Ensure data directory exists
     file:
       path: /opt/nomad
