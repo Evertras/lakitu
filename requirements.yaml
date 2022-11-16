@@ -1,2 +1,4 @@
 ---
-- src: geerlingguy.docker
+collections:
+  - src: geerlingguy.docker
+    name: geerlingguy.docker
