@@ -121,7 +121,7 @@ bin/wander:
 	@mkdir -p bin
 	curl -L \
 		https://github.com/robinovitch61/wander/releases/download/v0.6.0/wander_0.6.0_Darwin_all.tar.gz | \
-		tar -xf - -C bin wander
+		tar -xzf - -C bin wander
 
 # Nomad for the Linux VMs
 ansible/roles/nomad/files/nomad:
