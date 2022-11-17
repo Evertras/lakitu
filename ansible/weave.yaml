@@ -1,0 +1,4 @@
+---
+- hosts: lakitus, spineys
+  roles:
+    - weave

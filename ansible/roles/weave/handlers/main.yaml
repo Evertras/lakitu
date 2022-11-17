@@ -1,0 +1,7 @@
+---
+- name: Restart weave
+  become: true
+  systemd:
+    name: weave.service
+    daemon_reload: yes
+    state: restarted

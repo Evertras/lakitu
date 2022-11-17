@@ -17,3 +17,6 @@ managed_users:
 
 # This is enabled for the SSH sample, but this is NOT a good security practice!
 nomad_raw_exec_enabled: true
+weave_hosts:
+  - spiney1
+  - spiney2

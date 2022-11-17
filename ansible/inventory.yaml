@@ -13,7 +13,12 @@ spineys:
       ansible_host: 192.168.56.3
       ansible_ssh_private_key_file: ../.vagrant/machines/spiney1/virtualbox/private_key 
       advertise_ip: 192.168.56.3
+      # TODO: Define these better/smarter
+      weave_hosts:
+        - 192.168.56.4
     spiney2:
       ansible_host: 192.168.56.4
       ansible_ssh_private_key_file: ../.vagrant/machines/spiney2/virtualbox/private_key 
       advertise_ip: 192.168.56.4
+      weave_hosts:
+        - 192.168.56.3

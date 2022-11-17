@@ -1,0 +1,46 @@
+---
+- name: Install Weave
+  become: true
+  become_user: root
+  when: weave_hosts | length > 0
+  block:
+  - name: Download Weave
+    get_url:
+      url: https://git.io/weave
+      dest: /usr/local/bin/weave
+      mode: '0755'
+  - name: Add vagrant user to Docker group
+    user:
+      name: vagrant
+      state: present
+      groups: docker
+  - name: Ensure etc directory exists
+    file:
+      path: /etc/weave
+      state: directory
+      mode: 0755
+  - name: Add environment file containing config settings
+    notify: Restart weave
+    template:
+      src: hosts
+      dest: /etc/weave/config
+      mode: 0600
+  - name: Add systemctl service file
+    notify: Restart weave
+    template:
+      src: weave.service
+      dest: /etc/systemd/system/weave.service
+      mode: 0644
+- name: Flush handlers
+  meta: flush_handlers
+- name: Ensure Weave service is running
+  become: true
+  become_user: root
+  when: weave_hosts | length > 0
+  block:
+  - name: Ensure service is enabled
+    systemd:
+      name: weave.service
+      enabled: yes
+      state: started
+

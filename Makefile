@@ -36,6 +36,11 @@ ansible-apply: \
 users: .venv/bin/ansible
 	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml users.yaml
 
+# Apply weave
+.PHONY: weave
+weave: .venv/bin/ansible
+	@cd ansible && ../.venv/bin/ansible-playbook -i inventory.yaml weave.yaml
+
 # Generate missing user keys
 .PHONY: user-keys
 user-keys: .venv/bin/ansible

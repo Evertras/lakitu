@@ -1,0 +1,14 @@
+[Unit]
+Description=Weave Network
+Documentation=https://www.weave.works/docs/net/latest/install/systemd/
+Requires=docker.service
+After=docker.service
+
+[Service]
+EnvironmentFile=-/etc/weave/config
+ExecStartPre=/usr/local/bin/weave launch --no-restart ${WEAVE_PEERS}
+ExecStart=/usr/bin/docker attach weave
+ExecStop=/usr/local/bin/weave stop
+
+[Install]
+WantedBy=multi-user.target
