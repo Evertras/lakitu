@@ -5,8 +5,8 @@ PATH_add bin
 PATH_add .venv/bin
 
 # Point Nomad at the main server
-export NOMAD_ADDR=http://192.168.3.2:4646
+export NOMAD_ADDR=http://192.168.56.2:4646
 
 # Point Consul at the main server
-export CONSUL_HTTP_ADDR=http://192.168.3.2:8500
+export CONSUL_HTTP_ADDR=http://192.168.56.2:8500
 
