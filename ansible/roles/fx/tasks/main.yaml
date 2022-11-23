@@ -1,7 +1,0 @@
----
-- name: Install fx
-  become: true
-  become_user: root
-  get_url:
-    url: https://github.com/antonmedv/fx/releases/download/24.0.0/fx_linux_amd64
-    dest: /usr/local/bin/fx

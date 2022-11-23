@@ -1,0 +1,18 @@
+---
+- name: Update apt cache
+  become: true
+  apt:
+    update_cache: yes
+    cache_valid_time: 86400
+- name: Install some useful packages
+  become: true
+  apt:
+    pkg:
+      - jq
+- name: Install fx
+  become: true
+  become_user: root
+  get_url:
+    url: https://github.com/antonmedv/fx/releases/download/24.0.0/fx_linux_amd64
+    dest: /usr/local/bin/fx
+    mode: 0755
