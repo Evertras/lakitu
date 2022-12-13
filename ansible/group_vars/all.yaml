@@ -2,3 +2,5 @@
 datacenter: mushroom-kingdom
 ansible_user: vagrant
 lakitu_docker_registry_mirror: "{{ lookup('env', 'LAKITU_DOCKER_REGISTRY_MIRROR') }}"
+docker_users:
+  - vagrant
