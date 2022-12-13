@@ -19,13 +19,13 @@
       path: /etc/weave
       state: directory
       mode: 0755
-  - name: Add environment file containing config settings
+  - name: Render environment file containing config settings
     notify: Restart weave
     template:
       src: hosts
       dest: /etc/weave/config
       mode: 0600
-  - name: Add systemctl service file
+  - name: Render systemctl service file
     notify: Restart weave
     template:
       src: weave.service
