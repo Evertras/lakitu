@@ -7,6 +7,8 @@ lakitus:
       advertise_ip: 192.168.56.2
       # TODO: this doesn't feel good
       consul_cert_index: 0
+      weave_hosts:
+        - 192.168.56.3
 spineys:
   hosts:
     spiney1:
@@ -15,10 +17,10 @@ spineys:
       advertise_ip: 192.168.56.3
       # TODO: Define these better/smarter
       weave_hosts:
-        - 192.168.56.4
+        - 192.168.56.2
     spiney2:
       ansible_host: 192.168.56.4
       ansible_ssh_private_key_file: ../.vagrant/machines/spiney2/virtualbox/private_key 
       advertise_ip: 192.168.56.4
       weave_hosts:
-        - 192.168.56.3
+        - 192.168.56.2

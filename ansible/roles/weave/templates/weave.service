@@ -6,7 +6,7 @@ After=docker.service
 
 [Service]
 EnvironmentFile=-/etc/weave/config
-ExecStartPre=/usr/local/bin/weave launch --ipalloc-range 10.17.0.0/16 --ipalloc-default-subnet 10.17.1.0/24 --no-restart ${WEAVE_PEERS}
+ExecStartPre=/usr/local/bin/weave launch --ipalloc-range 10.17.0.0/16 --ipalloc-default-subnet 10.17.1.0/24 --no-restart --no-dns ${WEAVE_PEERS}
 ExecStart=/usr/bin/docker attach weave
 ExecStop=/usr/local/bin/weave stop
 
