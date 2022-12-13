@@ -1,0 +1,10 @@
+---
+- name: Install cyn
+  become: true
+  become_user: root
+  unarchive:
+    src: "https://github.com/Evertras/cynomys/releases/download/v{{ cynomys_version }}/cynomys_{{ cynomys_version }}_linux_amd64.tar.gz"
+    dest: /usr/local/bin/
+    remote_src: true
+    owner: root
+    group: root

@@ -3,6 +3,7 @@
   roles:
     - base
     - users
+    - cyn
     - role: geerlingguy.docker
       become: true
       vars:
