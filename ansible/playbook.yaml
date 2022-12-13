@@ -5,6 +5,9 @@
     - users
     - role: geerlingguy.docker
       become: true
+      vars:
+        docker_daemon_options:
+          registry-mirrors: "{{ [lakitu_docker_registry_mirror] if lakitu_docker_registry_mirror else [] }}"
     - consul
     - nomad
     - vault

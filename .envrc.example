@@ -10,3 +10,9 @@ export NOMAD_ADDR=http://192.168.56.2:4646
 # Point Consul at the main server
 export CONSUL_HTTP_ADDR=http://192.168.56.2:8500
 
+# No cows
+export ANSIBLE_NOCOWS=1
+
+# Use this to set a docker registry mirror
+#export LAKITU_DOCKER_REGISTRY_MIRROR=https://some-registry.internal
+
