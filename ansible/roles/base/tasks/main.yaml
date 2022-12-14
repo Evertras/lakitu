@@ -16,3 +16,8 @@
     url: https://github.com/antonmedv/fx/releases/download/24.0.0/fx_linux_amd64
     dest: /usr/local/bin/fx
     mode: 0755
+- name: Add vagrant user to Docker group
+  user:
+    name: vagrant
+    state: present
+    groups: docker

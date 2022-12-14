@@ -9,11 +9,6 @@
       url: https://git.io/weave
       dest: /usr/local/bin/weave
       mode: '0755'
-  - name: Add vagrant user to Docker group
-    user:
-      name: vagrant
-      state: present
-      groups: docker
   - name: Ensure etc directory exists
     file:
       path: /etc/weave
