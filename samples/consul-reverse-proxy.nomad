@@ -2,11 +2,9 @@
 job "consul-reverse-proxy" {
   datacenters = ["mushroom-kingdom"]
 
-  type = "service"
+  type = "system"
 
   group "nginx-proxy" {
-    count = 2
-
     network {
       mode = "host"
 
