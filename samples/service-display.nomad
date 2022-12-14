@@ -1,14 +1,13 @@
 job "service-display" {
   datacenters = ["mushroom-kingdom"]
 
-  type = "service"
+  type = "system"
 
   group "display-nginx" {
-    count = 4
-
     network {
       mode = "host"
       port "http" {
+        static = 8787
         to = 80
       }
     }
