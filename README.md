@@ -129,6 +129,16 @@ that we can use for storing and retrieving secrets.  Since we're already going
 full Hashicorp, let's use Vault for easier integration to handle our secrets
 such as credentials.
 
+### Weave
+
+[Weave net](https://www.weave.works/oss/net/) is a network overlay tool that
+allows us to create very fast L2 networks.  This allows us to let containers
+communicate together directly in configurable IP spaces, and isolate containers
+from each other in different subnets if we want to.
+
+[Weave Scope](https://www.weave.works/oss/scope/) is added for some additional
+visibility for low cost since we're already in Weaveworks land as well.
+
 ## Users
 
 A sample set of users and user management is added.  The intent is for the users
