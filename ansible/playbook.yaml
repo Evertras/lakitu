@@ -9,6 +9,7 @@
       vars:
         docker_daemon_options:
           registry-mirrors: "{{ [lakitu_docker_registry_mirror] if lakitu_docker_registry_mirror else [] }}"
+          icc: false
     - consul
     - nomad
     - vault
