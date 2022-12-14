@@ -4,7 +4,9 @@ ansible_user: vagrant
 lakitu_docker_registry_mirror: "{{ lookup('env', 'LAKITU_DOCKER_REGISTRY_MIRROR') }}"
 docker_users:
   - vagrant
+
+# TODO: Is there a better way to find these?
 weave_net_hosts:
-  - lakitu
-  - spiney1
-  - spiney2
+  - 192.168.56.2
+  - 192.168.56.3
+  - 192.168.56.4
