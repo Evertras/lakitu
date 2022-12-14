@@ -1,0 +1,7 @@
+---
+- name: Restart weave scope
+  become: true
+  systemd:
+    name: weave-scope.service
+    daemon_reload: yes
+    state: restarted

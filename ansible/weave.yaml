@@ -2,3 +2,4 @@
 - hosts: lakitus, spineys
   roles:
     - weave-net
+    - weave-scope

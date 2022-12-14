@@ -1,0 +1,12 @@
+[Unit]
+Description=Weave Scope
+Requires=docker.service
+After=docker.service
+
+[Service]
+ExecStartPre=/usr/local/bin/scope launch {{ weave_scope_hosts | join(' ') }}
+ExecStart=/usr/bin/docker attach weavescope
+ExecStop=/usr/local/bin/scope stop
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,49 @@
+---
+- name: Install Weave Scope
+  become: true
+  become_user: root
+  when: weave_scope_hosts | length > 0
+  block:
+  - name: Download Weave Scope
+    get_url:
+      url: https://git.io/scope
+      dest: /usr/local/bin/scope
+      mode: '0755'
+      owner: root
+      group: root
+  - name: Ensure etc directory exists
+    file:
+      path: /etc/weave-scope
+      state: directory
+      mode: 0755
+      owner: root
+      group: root
+  - name: Render environment file containing config settings
+    notify: Restart weave scope
+    template:
+      src: hosts
+      dest: /etc/weave-scope/config
+      mode: 0600
+      owner: root
+      group: root
+  - name: Render systemctl service file
+    notify: Restart weave scope
+    template:
+      src: weave-scope.service
+      dest: /etc/systemd/system/weave-scope.service
+      mode: 0644
+      owner: root
+      group: root
+- name: Flush handlers
+  meta: flush_handlers
+- name: Ensure Weave service is running
+  become: true
+  become_user: root
+  when: weave_scope_hosts | length > 0
+  block:
+  - name: Ensure service is enabled
+    systemd:
+      name: weave-scope.service
+      enabled: yes
+      state: started
+
