@@ -1,41 +1,49 @@
 ---
-- name: Install Weave
+- name: Install Weave net
   become: true
   become_user: root
-  when: weave_hosts | length > 0
+  when: weave_net_hosts | length > 0
   block:
   - name: Download Weave
     get_url:
       url: https://git.io/weave
       dest: /usr/local/bin/weave
       mode: '0755'
+      owner: root
+      group: root
   - name: Ensure etc directory exists
     file:
-      path: /etc/weave
+      path: /etc/weave-net
       state: directory
       mode: 0755
+      owner: root
+      group: root
   - name: Render environment file containing config settings
-    notify: Restart weave
+    notify: Restart weave net
     template:
       src: hosts
-      dest: /etc/weave/config
+      dest: /etc/weave-net/config
       mode: 0600
+      owner: root
+      group: root
   - name: Render systemctl service file
-    notify: Restart weave
+    notify: Restart weave net
     template:
-      src: weave.service
-      dest: /etc/systemd/system/weave.service
+      src: weave-net.service
+      dest: /etc/systemd/system/weave-net.service
       mode: 0644
+      owner: root
+      group: root
 - name: Flush handlers
   meta: flush_handlers
 - name: Ensure Weave service is running
   become: true
   become_user: root
-  when: weave_hosts | length > 0
+  when: weave_net_hosts | length > 0
   block:
   - name: Ensure service is enabled
     systemd:
-      name: weave.service
+      name: weave-net.service
       enabled: yes
       state: started
 

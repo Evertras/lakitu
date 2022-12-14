@@ -1,4 +1,4 @@
 ---
 - hosts: lakitus, spineys
   roles:
-    - weave
+    - weave-net

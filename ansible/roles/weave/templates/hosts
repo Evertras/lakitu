@@ -1,1 +1,0 @@
-WEAVE_PEERS="{{ weave_hosts | join(' ') }}"

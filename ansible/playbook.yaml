@@ -13,4 +13,4 @@
     - consul
     - nomad
     - vault
-    - weave
+    - weave-net

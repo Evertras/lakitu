@@ -1,0 +1,3 @@
+weave_net_hosts: []
+weave_net_cidr: "10.8.0.0/13"
+weave_net_default_subnet: "10.8.0.0/24"
