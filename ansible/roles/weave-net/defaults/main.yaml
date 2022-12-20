@@ -1,3 +1,9 @@
 weave_net_hosts: []
+
+# Total address space
+# 10.8.0.0 - 10.15.255.255 (524,288 hosts)
 weave_net_cidr: "10.8.0.0/13"
-weave_net_default_subnet: "10.8.0.0/24"
+
+# Default subnet if not otherwise specified for all to share
+# 10.8.0.0 - 10.8.15.255 (4096 hosts)
+weave_net_default_subnet: "10.8.0.0/20"
