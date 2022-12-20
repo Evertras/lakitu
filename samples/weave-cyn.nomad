@@ -7,6 +7,7 @@ job "weave-cyn" {
     task "client" {
       driver = "docker"
 
+      # 10.9.81.0/29 is 10.9.81.0 - 10.9.81.7
       env {
         WEAVE_CIDR = "10.9.81.2/29"
       }
