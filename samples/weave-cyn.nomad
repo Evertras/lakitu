@@ -1,3 +1,21 @@
+################################################################################
+# Weave + Cynomys demo
+#
+# Demonstrates connectivity between containers across different nodes using
+# Weave as an overlay network, with specific subnets chosen.
+#
+# Subnet reference (.0 is unusable, .7/.255 is broadcast address)
+# Weave default  - 10.8.0.0/20 (10.8.0.0 - 10.8.15.255)
+# Main subnet    - 10.9.81.0/29 (10.9.81.0 - 10.9.81.7)
+# Outside subnet - 10.9.71.0/29 (10.9.71.0 - 10.9.71.7)
+#
+# IP reference
+# Broadcast     - 10.9.81.1
+# Mesh client 1 - 10.9.81.2
+# Mesh client 2 - 10.9.81.3
+# Bad Broadcast - 10.9.71.1
+################################################################################
+
 job "weave-cyn" {
   datacenters = ["mushroom-kingdom"]
 
