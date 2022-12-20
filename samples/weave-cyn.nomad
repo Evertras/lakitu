@@ -3,7 +3,15 @@ job "weave-cyn" {
 
   type = "service"
 
+  # Ensure they run on different nodes for demo purposes
+  constraint {
+    attribute = "${node.unique.id}"
+    operator = "distinct_property"
+    value = 2
+  }
+
   group "mesh-client-1" {
+
     task "client" {
       driver = "docker"
 
@@ -19,6 +27,9 @@ job "weave-cyn" {
 
       config {
         image = "evertras/cynomys"
+
+        # Do not go onto the local Docker network, Weave will add a network for us
+        network_mode = "none"
 
         args = ["-c", "/config.yaml"]
 
@@ -56,6 +67,8 @@ EOF
 
       config {
         image = "evertras/cynomys"
+
+        network_mode = "none"
 
         args = ["-c", "/config.yaml"]
 
@@ -96,6 +109,8 @@ EOF
       config {
         image = "evertras/cynomys"
 
+        network_mode = "none"
+
         args = ["-c", "/config.yaml"]
 
         volumes = [
@@ -133,6 +148,8 @@ EOF
 
       config {
         image = "evertras/cynomys"
+
+        network_mode = "none"
 
         args = ["-c", "/config.yaml"]
 
