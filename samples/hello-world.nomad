@@ -12,7 +12,7 @@ job "hello" {
       config {
         command = "echo"
 
-        args = ["Hello", "world!"]
+        args = ["Hello", "${node.unique.name}!"]
       }
 
       resources {
