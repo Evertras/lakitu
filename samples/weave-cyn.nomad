@@ -21,14 +21,12 @@ job "weave-cyn" {
 
   type = "service"
 
-  # Ensure they run on different nodes for demo purposes
-  constraint {
-    attribute = "${node.unique.id}"
-    operator = "distinct_property"
-    value = 2
-  }
-
   group "mesh-client-1" {
+    # Ensure they run on different nodes for demo purposes
+    constraint {
+      attribute = "${node.unique.name}"
+      value = "spiney1"
+    }
 
     task "client" {
       driver = "docker"
@@ -71,6 +69,12 @@ EOF
   }
 
   group "mesh-client-2" {
+    # Ensure they run on different nodes for demo purposes
+    constraint {
+      attribute = "${node.unique.name}"
+      value = "spiney2"
+    }
+
     task "client" {
       driver = "docker"
 
@@ -150,7 +154,7 @@ EOF
   group "outsider-broadcast" {
     count = 1
 
-    task "broadcaster" {
+    task "badbroadcaster" {
       driver = "docker"
 
       # This subnet is separate from the others, so it should not receive anything
