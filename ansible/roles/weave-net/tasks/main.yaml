@@ -18,6 +18,11 @@
       mode: 0755
       owner: root
       group: root
+  - name: Install clean script as rapid fire cron job
+    cron:
+      name: weave clean
+      job: /usr/local/bin/weave-clean
+      user: root
   - name: Ensure etc directory exists
     file:
       path: /etc/weave-net
