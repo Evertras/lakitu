@@ -11,6 +11,13 @@
       mode: '0755'
       owner: root
       group: root
+  - name: Install clean script
+    template:
+      src: weave-clean.sh
+      dest: /usr/local/bin/weave-clean
+      mode: 0755
+      owner: root
+      group: root
   - name: Ensure etc directory exists
     file:
       path: /etc/weave-net
