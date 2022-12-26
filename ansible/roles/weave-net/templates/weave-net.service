@@ -7,7 +7,7 @@ After=docker.service
 EnvironmentFile=-/etc/weave-net/config
 ExecStartPre=/usr/local/bin/weave launch \
   --ipalloc-range {{ weave_net_cidr }} \
-  --ipalloc-default-subnet {{ weave_net_default_subnet }} \
+  --no-default-ipalloc \
   --no-restart \
   --no-dns \
   ${WEAVE_PEERS}
