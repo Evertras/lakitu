@@ -18,7 +18,7 @@
       mode: 0755
       owner: root
       group: root
-  - name: Install clean script as rapid fire cron job
+  - name: Install clean script as cron job once per minute
     cron:
       name: weave clean
       job: /usr/local/bin/weave-clean
