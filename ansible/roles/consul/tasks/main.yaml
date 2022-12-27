@@ -6,12 +6,12 @@
 - become: true
   become_user: root
   block:
-  - name: Flush handlers
-    meta: flush_handlers
-  - name: Ensure Consul is running
-    systemd:
-      name: consul.service
-      state: started
-      enabled: yes
+    - name: Flush handlers
+      meta: flush_handlers
+    - name: Ensure Consul is running
+      systemd:
+        name: consul.service
+        state: started
+        enabled: yes
 - name: Configure DNS
   import_tasks: dns.yaml

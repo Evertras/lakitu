@@ -13,7 +13,7 @@ managed_users:
   - name: peach
     groups: hero
   - name: wario
-    groups: enemy 
+    groups: enemy
 
 # This is enabled for the SSH sample, but this is NOT a good security practice!
 nomad_raw_exec_enabled: true

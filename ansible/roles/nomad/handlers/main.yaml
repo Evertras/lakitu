@@ -5,4 +5,3 @@
     name: nomad.service
     daemon_reload: yes
     state: restarted
-

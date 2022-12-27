@@ -13,4 +13,3 @@
 - name: Save iptables
   become: true
   command: iptables-save
-

@@ -17,3 +17,5 @@ ansible/keys/public
 
 # From SSH demo job
 demokey.key
+
+node_modules

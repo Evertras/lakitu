@@ -1,0 +1,16 @@
+# Local stuff
+.envrc
+.git
+/bin
+
+# Vagrant stuff
+/.vagrant
+
+# Python stuff
+/.venv
+
+# Prettier installs locally here
+node_modules
+
+# Generated file that isn't checked in
+ansible/roles/consul/vars/main.yaml

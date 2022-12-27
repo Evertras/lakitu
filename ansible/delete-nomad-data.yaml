@@ -10,4 +10,3 @@
       file:
         path: /opt/nomad
         state: absent
-

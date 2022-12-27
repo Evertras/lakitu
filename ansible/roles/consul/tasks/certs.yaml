@@ -2,27 +2,26 @@
 - become: true
   become_user: root
   block:
-  - name: Add CA public key
-    copy:
-      src: certs/consul-agent-ca.pem
-      dest: /etc/consul.d/ca.pem
-      mode: 0644
-      owner: consul
-      group: consul
-  - name: Add server cert public key
-    copy:
-      src: "certs/{{ datacenter }}-server-consul-{{ consul_cert_index }}.pem"
-      dest: /etc/consul.d/cert.pem
-      mode: 0640
-      owner: consul
-      group: consul
-    when: is_consul_server
-  - name: Add server cert private key
-    copy:
-      src: "certs/{{ datacenter }}-server-consul-{{ consul_cert_index }}-key.pem"
-      dest: /etc/consul.d/cert-key.pem
-      mode: 0640
-      owner: consul
-      group: consul
-    when: is_consul_server
-
+    - name: Add CA public key
+      copy:
+        src: certs/consul-agent-ca.pem
+        dest: /etc/consul.d/ca.pem
+        mode: 0644
+        owner: consul
+        group: consul
+    - name: Add server cert public key
+      copy:
+        src: "certs/{{ datacenter }}-server-consul-{{ consul_cert_index }}.pem"
+        dest: /etc/consul.d/cert.pem
+        mode: 0640
+        owner: consul
+        group: consul
+      when: is_consul_server
+    - name: Add server cert private key
+      copy:
+        src: "certs/{{ datacenter }}-server-consul-{{ consul_cert_index }}-key.pem"
+        dest: /etc/consul.d/cert-key.pem
+        mode: 0640
+        owner: consul
+        group: consul
+      when: is_consul_server

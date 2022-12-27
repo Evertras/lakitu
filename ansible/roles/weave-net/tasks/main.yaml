@@ -4,48 +4,48 @@
   become_user: root
   when: weave_net_hosts | length > 0
   block:
-  - name: Download Weave
-    get_url:
-      url: https://git.io/weave
-      dest: /usr/local/bin/weave
-      mode: '0755'
-      owner: root
-      group: root
-  - name: Install clean script
-    template:
-      src: weave-clean.sh
-      dest: /usr/local/bin/weave-clean
-      mode: 0755
-      owner: root
-      group: root
-  - name: Install clean script as cron job once per minute
-    cron:
-      name: weave clean
-      job: /usr/local/bin/weave-clean
-      user: root
-  - name: Ensure etc directory exists
-    file:
-      path: /etc/weave-net
-      state: directory
-      mode: 0755
-      owner: root
-      group: root
-  - name: Render environment file containing config settings
-    notify: Restart weave net
-    template:
-      src: hosts
-      dest: /etc/weave-net/config
-      mode: 0600
-      owner: root
-      group: root
-  - name: Render systemctl service file
-    notify: Restart weave net
-    template:
-      src: weave-net.service
-      dest: /etc/systemd/system/weave-net.service
-      mode: 0644
-      owner: root
-      group: root
+    - name: Download Weave
+      get_url:
+        url: https://git.io/weave
+        dest: /usr/local/bin/weave
+        mode: "0755"
+        owner: root
+        group: root
+    - name: Install clean script
+      template:
+        src: weave-clean.sh
+        dest: /usr/local/bin/weave-clean
+        mode: 0755
+        owner: root
+        group: root
+    - name: Install clean script as cron job once per minute
+      cron:
+        name: weave clean
+        job: /usr/local/bin/weave-clean
+        user: root
+    - name: Ensure etc directory exists
+      file:
+        path: /etc/weave-net
+        state: directory
+        mode: 0755
+        owner: root
+        group: root
+    - name: Render environment file containing config settings
+      notify: Restart weave net
+      template:
+        src: hosts
+        dest: /etc/weave-net/config
+        mode: 0600
+        owner: root
+        group: root
+    - name: Render systemctl service file
+      notify: Restart weave net
+      template:
+        src: weave-net.service
+        dest: /etc/systemd/system/weave-net.service
+        mode: 0644
+        owner: root
+        group: root
 - name: Flush handlers
   meta: flush_handlers
 - name: Ensure Weave service is running
@@ -53,9 +53,8 @@
   become_user: root
   when: weave_net_hosts | length > 0
   block:
-  - name: Ensure service is enabled
-    systemd:
-      name: weave-net.service
-      enabled: yes
-      state: started
-
+    - name: Ensure service is enabled
+      systemd:
+        name: weave-net.service
+        enabled: yes
+        state: started

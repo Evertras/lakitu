@@ -1,6 +1,6 @@
 # Lakitu
 
-A playground for tiny virtual cloud things.  Intended to be a personal reference
+A playground for tiny virtual cloud things. Intended to be a personal reference
 and for playing with various cloud-y tools in a repeatable way.
 
 This will not contain any AWS/GCP/Azure/etc things, but rather focuses on tools
@@ -23,9 +23,9 @@ and products that get installed on infrastructure and Ansible to maintain them.
 
 The following must be explicitly installed on the host machine.
 
-* Makefile
-* [Python 3.9.5](https://github.com/pyenv/pyenv)
-* [Vagrant](https://www.vagrantup.com/downloads) (See below for why)
+- Makefile
+- [Python 3.9.5](https://github.com/pyenv/pyenv)
+- [Vagrant](https://www.vagrantup.com/downloads) (See below for why)
 
 Everything else should be installed through the Makefile in a local scope only.
 
@@ -36,7 +36,7 @@ This is being developed on a mac, but should also work fine on Linux.
 [Direnv](https://github.com/direnv/direnv) allows us to set local environment
 files and add to our path while working within this repository.
 
-[A sample .envrc file](./envrc.example) has been added for reference.  Direnv
+[A sample .envrc file](./envrc.example) has been added for reference. Direnv
 is not strictly necessary, but it will make playing around with CLI tools against
 the cluster much, much easier.
 
@@ -90,15 +90,15 @@ This is used to bring up local VMs to play with to emulate a cloud without havin
 to actually create any costly resources.
 
 Note that we can't vendor this tool because Vagrant's install process also helps
-set up a virtual machine provider.  [Check the Vagrant downloads page](https://www.vagrantup.com/downloads)
+set up a virtual machine provider. [Check the Vagrant downloads page](https://www.vagrantup.com/downloads)
 for proper instructions on installing Vagrant.
 
 ### Ansible
 
-We use [Ansible](https://ansible.com) to configure our machines.  Note that Vagrant
+We use [Ansible](https://ansible.com) to configure our machines. Note that Vagrant
 [has an Ansible provisioner](https://www.vagrantup.com/docs/provisioning/ansible)
-but we're actively choosing not to use it.  Instead we want to manually set up
-our Ansible purely for practice/simplicity.  The point is to play with Ansible
+but we're actively choosing not to use it. Instead we want to manually set up
+our Ansible purely for practice/simplicity. The point is to play with Ansible
 as if we were targeting regular machines that live somewhere else.
 
 Additionally, Ansible Galaxy is used more sparingly than it might otherwise be,
@@ -110,7 +110,7 @@ Ansible is installed via the Makefile using a Python virtual environment.
 
 [Hashicorp Nomad](https://nomadproject.io) runs various arbitrary workloads
 and allows us to connect our machines together in a cluster where we can run
-various things.  This is nicer than Kubernetes in this particular case because
+various things. This is nicer than Kubernetes in this particular case because
 we can run things directly on the VM itself.
 
 [Wander](https://github.com/robinovitch61/wander) is added as a quick TUI
@@ -119,20 +119,20 @@ interface.
 ### Consul
 
 [Hashicorp Consul](https://www.consul.io) is service mesh, networking thing that
-Nomad uses to coordinate itself.  Mostly I just want to actually learn to use
+Nomad uses to coordinate itself. Mostly I just want to actually learn to use
 Consul in a sandbox area to see what it can really do.
 
 ### Vault
 
 [Hashicorp Vault](https://www.vaultproject.io/) is a secrets management tool
-that we can use for storing and retrieving secrets.  Since we're already going
+that we can use for storing and retrieving secrets. Since we're already going
 full Hashicorp, let's use Vault for easier integration to handle our secrets
 such as credentials.
 
 ### Weave
 
 [Weave net](https://www.weave.works/oss/net/) is a network overlay tool that
-allows us to create very fast L2 networks.  This allows us to let containers
+allows us to create very fast L2 networks. This allows us to let containers
 communicate together directly in configurable IP spaces, and isolate containers
 from each other in different subnets if we want to.
 
@@ -141,15 +141,15 @@ visibility for low cost since we're already in Weaveworks land as well.
 
 ## Users
 
-A sample set of users and user management is added.  The intent is for the users
-to provide a public key, or they can have their keys generated.  Since this is
-just a demo, the keys must be generated.  In a real setup, the registered public
+A sample set of users and user management is added. The intent is for the users
+to provide a public key, or they can have their keys generated. Since this is
+just a demo, the keys must be generated. In a real setup, the registered public
 keys should be checked into git, and the private keys should be stored
 elsewhere.
 
-This setup uses the user name to look for the SSH key.  Only the public key must
+This setup uses the user name to look for the SSH key. Only the public key must
 exist for the playbook to be run, and it must be placed in
-`ansible/keys/public/<username>.pub`.  The private keys are generated on the fly
+`ansible/keys/public/<username>.pub`. The private keys are generated on the fly
 purely for demonstration purposes and do not necessarily need to live in the
 private folder.
 
@@ -172,14 +172,13 @@ ssh -i ansible/keys/private/mario mario@192.168.56.3
 
 In no particular order and not an exclusive list, just jotting things down here.
 
-* Pin ansible version in virtualenv
-* Put Consul encryption into Vault
-* Add Minio
-* Add some microservices via Nomad + Consul discovery
-* Figure out whether x.service should be in x-server or x (Nomad/Consul)
-* RPC encryption for Consul
-* Create multiple lakitus to make a real clustered server plane
-* Play with Consul templating
-* Consul auth for API/CLI from host machine
-* Better system for Consul cert generation, this is currently fragile/bleh
-
+- Pin ansible version in virtualenv
+- Put Consul encryption into Vault
+- Add Minio
+- Add some microservices via Nomad + Consul discovery
+- Figure out whether x.service should be in x-server or x (Nomad/Consul)
+- RPC encryption for Consul
+- Create multiple lakitus to make a real clustered server plane
+- Play with Consul templating
+- Consul auth for API/CLI from host machine
+- Better system for Consul cert generation, this is currently fragile/bleh

@@ -12,4 +12,3 @@
     name: vault.service
     daemon_reload: yes
     state: restarted
-

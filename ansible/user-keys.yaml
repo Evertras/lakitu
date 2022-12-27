@@ -2,12 +2,12 @@
 - hosts: lakitus, spineys
   serial: 1
   tasks:
-  - name: List users
-    set_fact:
-      managed_user_names: "{{ managed_users | map(attribute='name') | unique }}"
-  - name: Generate missing keys
-    local_action:
-      module: command
-      cmd: "{{ playbook_dir }}/../hack/gen-keypair.sh {{ item }}"
-      creates: "{{ playbook_dir }}/keys/public/{{ item }}.pub"
-    with_items: "{{ managed_user_names }}"
+    - name: List users
+      set_fact:
+        managed_user_names: "{{ managed_users | map(attribute='name') | unique }}"
+    - name: Generate missing keys
+      local_action:
+        module: command
+        cmd: "{{ playbook_dir }}/../hack/gen-keypair.sh {{ item }}"
+        creates: "{{ playbook_dir }}/keys/public/{{ item }}.pub"
+      with_items: "{{ managed_user_names }}"

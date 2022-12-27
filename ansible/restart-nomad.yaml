@@ -14,4 +14,3 @@
       systemd:
         name: nomad.service
         state: restarted
-

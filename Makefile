@@ -14,6 +14,11 @@ CONSUL_CERT_SERVER_LAST_INDEX := 0
 ensure-env: ensure-python .venv/bin/ansible
 	@echo Ready to go!
 
+# Consistent formatting
+.PHONY: fmt
+fmt: node_modules
+	npx prettier --write .
+
 # Makes sure all services are installed/running
 .PHONY: ansible-apply
 ansible-apply: \
@@ -180,6 +185,10 @@ ansible/roles/consul/files/certs/$(DC)-server-consul-$(CONSUL_CERT_SERVER_LAST_I
 		for i in $(shell seq 0 $(CONSUL_CERT_SERVER_LAST_INDEX)); do \
 			../../../../../bin/consul tls cert create -server -dc $(DC) > /dev/null; \
 		done
+
+node_modules: package.json package-lock.json
+	npm install
+	@touch node_modules
 
 # Make sure "python" points to 3.9.5 version to make sure pyenv is in effect
 # and that we have the latest Python for the latest Ansible version to use
