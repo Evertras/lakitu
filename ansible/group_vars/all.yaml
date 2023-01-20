@@ -6,10 +6,6 @@ docker_users:
   - vagrant
 
 # TODO: Is there a better way to find these?
-weave_net_hosts:
-  - 192.168.56.2
-  - 192.168.56.3
-  - 192.168.56.4
 weave_scope_hosts:
   - 192.168.56.2
   - 192.168.56.3
