@@ -47,6 +47,8 @@ job "weave-cyn" {
         # Do not go onto the local Docker network, Weave will add a network for us
         network_mode = "none"
 
+        hostname = "client-1"
+
         args = ["-c", "/config.yaml"]
 
         volumes = [
@@ -92,6 +94,8 @@ EOF
 
         network_mode = "none"
 
+        hostname = "client-2"
+
         args = ["-c", "/config.yaml"]
 
         volumes = [
@@ -133,6 +137,8 @@ EOF
 
         network_mode = "none"
 
+        hostname = "broadcast"
+
         args = ["-c", "/config.yaml"]
 
         volumes = [
@@ -172,6 +178,8 @@ EOF
         image = "evertras/cynomys"
 
         network_mode = "none"
+
+        hostname = "broadcast-bad"
 
         args = ["-c", "/config.yaml"]
 
