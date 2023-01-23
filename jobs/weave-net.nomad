@@ -4,11 +4,6 @@ job "weave-system" {
   type = "system"
 
   group "weave" {
-    resources {
-      cpu    = 300
-      memory = 200
-    }
-
     task "launch" {
       driver = "raw_exec"
 
@@ -43,6 +38,11 @@ job "weave-system" {
     }
 
     task "attach" {
+      resources {
+        cpu    = 300
+        memory = 200
+      }
+
       driver = "raw_exec"
 
       config {
