@@ -1,9 +1,19 @@
-job "weave-system" {
+job "weave-net" {
   datacenters = ["mushroom-kingdom"]
 
   type = "system"
 
   group "weave" {
+    service {
+      name = "weave-net-agent"
+    }
+
+    network {
+      port "weave-net" {
+        static = 6789
+      }
+    }
+
     task "launch" {
       driver = "raw_exec"
 
@@ -18,6 +28,14 @@ job "weave-system" {
         mode = "file"
       }
 
+      template {
+        data = <<-EOF
+        {{- range service "weave-net-agent" }}{{ .Address }} {{ end }}
+        EOF
+
+        destination = "local/weave_peers"
+      }
+
       config {
         command = "bash"
         args = [
@@ -25,13 +43,13 @@ job "weave-system" {
           <<-EOF
           set -x
           chmod +x ./alloc/weave
+          ./alloc/weave stop || echo "No existing weave found, this is fine"
           ./alloc/weave launch \
             --ipalloc-range 10.3.0.0/16 \
             --no-default-ipalloc \
             --no-restart \
             --no-dns \
-            192.168.56.3 \
-            192.168.56.4
+            $(cat local/weave_peers)
           EOF
         ]
       }
