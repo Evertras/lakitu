@@ -9,7 +9,7 @@ StartLimitBurst=3
 [Service]
 Type=exec
 ExecReload=/bin/kill -HUP $MAINPID
-ExecStart=/usr/local/bin/consul agent -config-dir /etc/consul.d
+ExecStart=/usr/local/bin/consul agent -config-dir /etc/consul.d -config-dir /etc/consul.d/services
 KillMode=process
 KillSignal=SIGTERM
 Restart=on-failure

@@ -15,3 +15,16 @@
         enabled: yes
 - name: Configure DNS
   import_tasks: dns.yaml
+- name: Install services
+  become: true
+  become_user: root
+  with_items: "{{ consul_services }}"
+  vars:
+    service_name: "{{ item.name }}"
+    service_port: "{{ item.port }}"
+  template:
+    src: service.hcl
+    dest: "/etc/consul.d/services/{{ item.name }}.hcl"
+    owner: consul
+    mode: 0644
+  notify: Restart consul

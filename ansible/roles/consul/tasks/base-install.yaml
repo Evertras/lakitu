@@ -13,9 +13,12 @@
         home: /etc/consul.d/
         shell: /bin/false
         system: yes
-    - name: Ensure config directory exists
+    - name: Ensure config directories exists
+      loop:
+        - /etc/consul.d
+        - /etc/consul.d/services
       file:
-        path: /etc/consul.d
+        path: "{{ item }}"
         state: directory
         owner: consul
         group: consul
