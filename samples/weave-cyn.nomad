@@ -42,7 +42,7 @@ job "weave-cyn" {
       }
 
       config {
-        image = "evertras/cynomys"
+        image = "evertras/cynomys:v0.2.4"
 
         # Do not go onto the local Docker network, Weave will add a network for us
         network_mode = "none"
@@ -62,8 +62,9 @@ job "weave-cyn" {
         data = <<EOF
 listen-udp:
   - ":2000"
+listen-tcp:
   - ":1234"
-send-udp:
+send-tcp:
   - "10.9.81.3:1234"
 EOF
       }
@@ -90,7 +91,7 @@ EOF
       }
 
       config {
-        image = "evertras/cynomys"
+        image = "evertras/cynomys:v0.2.4"
 
         network_mode = "none"
 
@@ -109,8 +110,9 @@ EOF
         data = <<EOF
 listen-udp:
   - ":2000"
+listen-tcp:
   - ":1234"
-send-udp:
+send-tcp:
   - "10.9.81.2:1234"
 EOF
       }
@@ -133,7 +135,7 @@ EOF
       }
 
       config {
-        image = "evertras/cynomys"
+        image = "evertras/cynomys:v0.2.4"
 
         network_mode = "none"
 
@@ -175,7 +177,7 @@ EOF
       }
 
       config {
-        image = "evertras/cynomys"
+        image = "evertras/cynomys:v0.2.4"
 
         network_mode = "none"
 
@@ -195,9 +197,11 @@ EOF
         data = <<EOF
 listen-udp:
   - ":2000"
+listen-tcp:
   - ":1234"
 send-udp:
   - "10.9.81.7:2000"
+send-tcp:
   - "10.9.81.2:1234"
 EOF
       }
