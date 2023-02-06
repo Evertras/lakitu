@@ -5,7 +5,7 @@
 # Weave as an overlay network, with specific subnets chosen.
 #
 # Subnet reference (.0 is unusable, .7/.255 is broadcast address)
-# Weave default  - 10.8.0.0/20 (10.8.0.0 - 10.8.15.255)
+# Weave overall  - 10.8.0.0/13 (10.8.0.0 - 10.15.255.255)
 # Main subnet    - 10.9.81.0/29 (10.9.81.0 - 10.9.81.7)
 # Outside subnet - 10.9.71.0/29 (10.9.71.0 - 10.9.71.7)
 #

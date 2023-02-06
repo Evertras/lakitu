@@ -4,22 +4,22 @@ job "weave-net" {
   type = "system"
 
   group "weave" {
+    restart {
+      interval = "5m"
+      attempts = 5
+      delay = "10s"
+      mode = "delay"
+    }
+
     service {
-      name = "weave-net-agent"
+      name = "weave-server"
     }
 
-    network {
-      port "weave-net" {
-        static = 6789
-      }
-    }
-
-    task "launch" {
+    task "install" {
       driver = "raw_exec"
 
       lifecycle {
         hook = "prestart"
-        sidecar = false
       }
 
       artifact {
@@ -28,9 +28,33 @@ job "weave-net" {
         mode = "file"
       }
 
+      # Install to a dedicated directory rather than potentially do destructive
+      # things on the host machine.  We install here so that other jobs can also
+      # run the weave CLI for doing things like rmpeer cleanup, etc.
+      config {
+        command = "bash"
+        args = [
+          "-c",
+          <<-EOF
+          chmod +x ./alloc/weave
+          # This is not good for a production environment, but easy for lakitu use
+          cp ./alloc/weave /usr/local/bin/weave
+          EOF
+        ]
+      }
+    }
+
+    task "weave" {
+      resources {
+        cpu    = 300
+        memory = 200
+      }
+
+      driver = "raw_exec"
+
       template {
         data = <<-EOF
-        {{- range service "weave-net-agent" }}{{ .Address }} {{ end }}
+        {{- range service "weave-server" }}{{ .Address }} {{ end }}
         EOF
 
         destination = "local/weave_peers"
@@ -39,34 +63,17 @@ job "weave-net" {
       config {
         command = "bash"
         args = [
-          "-c",
-          <<-EOF
+          "-c", <<-EOF
           set -x
-          chmod +x ./alloc/weave
-          ./alloc/weave stop || echo "No existing weave found, this is fine"
-          ./alloc/weave launch \
-            --ipalloc-range 10.3.0.0/16 \
+          WEAVE_STATUS_ADDR=0.0.0.0:6782 /opt/weave-net-nomad/weave launch \
+            --ipalloc-range 10.32.0.0/12 \
             --no-default-ipalloc \
+            --ipalloc-init=observer \
             --no-restart \
             --no-dns \
             $(cat local/weave_peers)
+          docker attach weave
           EOF
-        ]
-      }
-    }
-
-    task "attach" {
-      resources {
-        cpu    = 300
-        memory = 200
-      }
-
-      driver = "raw_exec"
-
-      config {
-        command = "docker"
-        args = [
-          "attach", "weave",
         ]
       }
     }
@@ -79,7 +86,7 @@ job "weave-net" {
       }
 
       config {
-        command = "./alloc/weave"
+        command = "/opt/weave-net-nomad/weave"
         args = [ "stop" ]
       }
     }
