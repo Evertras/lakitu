@@ -6,6 +6,12 @@ Vagrant.configure("2") do |config|
   # providers compared to the "official" ubuntu version
   config.vm.box = "bento/ubuntu-20.04"
 
+  # Give a bit more memory than default 1 GB, may need to tweak this depending
+  # on host machine
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 2048
+  end
+
   # This is the main host where we run servers/etc
   config.vm.define "lakitu", primary: true do |lakitu|
     lakitu.vm.hostname = "lakitu"
