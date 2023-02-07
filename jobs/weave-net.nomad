@@ -65,7 +65,7 @@ job "weave-net" {
         args = [
           "-c", <<-EOF
           set -x
-          WEAVE_STATUS_ADDR=0.0.0.0:6782 /opt/weave-net-nomad/weave launch \
+          WEAVE_STATUS_ADDR=0.0.0.0:6782 weave launch \
             --ipalloc-range 10.8.0.0/13 \
             --no-default-ipalloc \
             --ipalloc-init=observer \
@@ -86,7 +86,7 @@ job "weave-net" {
       }
 
       config {
-        command = "/opt/weave-net-nomad/weave"
+        command = "weave"
         args = [ "stop" ]
       }
     }
