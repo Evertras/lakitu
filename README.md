@@ -47,24 +47,42 @@ Note that this assumes you have `direnv` enabled and a `.envrc` the same as
 the example; otherwise you'll need to set these yourself and use `./bin/nomad`
 and `./bin/consul` directly.
 
+Run the following in order to set everything up and see it working.
+
 ```bash
 # Start the machines
 vagrant up
 
-# Quick sanity check to see if we can reach our hosts
+# Quick sanity check to see if we can reach our hosts - if this fails, running
+# it again seems to fix it.  Sometimes the SSH connection to Vagrant is a little
+# strange on the first try, still not sure why...
 make ansible-ping
 
 # Apply the Ansible roles
 make ansible-apply
 
-# Sanity check Nomad - should see the spineys ready after a short time
+# Sanity check Nomad - should see the spineys ready after a short time.
+# Remember this is ./bin/nomad if you haven't updated your PATH in .envrc
 nomad node status
 
-# Sanity check Consul - should see all hosts as members
+# Sanity check Consul - should see all 3 hosts as members
 consul members
 
+# Run Weave and its cleanup job
+nomad run jobs/weave-net.nomad
+nomad run jobs/weave-cleanup.nomad
+
+# At this point, everything is set up and running.  The rest is to see it
+# working and to try out some sample jobs.
+
 # You can check the Consul UI here:
-open http://192.168.3.2:8500/ui
+open http://192.168.56.2:8500/ui
+
+# You can check the Nomad UI here:
+open http://192.168.56.2:4646/ui
+
+# You can check the Weave Scope UI here:
+open http://192.168.56.3:4040
 
 # Try a sample Nomad job - note this uses the values in .envrc.example to point
 # to the cluster and use our local Nomad CLI binary.  If you don't use direnv,
@@ -75,7 +93,10 @@ nomad run samples/hello-world.nomad
 nomad status hello
 nomad alloc logs abcdef hostname
 
-# Tear everything down
+# Try a job that uses Weave net to communicate
+nomad run samples/weave-cyn.nomad
+
+# Tear everything down if you're done
 vagrant destroy -f
 ```
 
@@ -137,7 +158,11 @@ communicate together directly in configurable IP spaces, and isolate containers
 from each other in different subnets if we want to.
 
 [Weave Scope](https://www.weave.works/oss/scope/) is added for some additional
-visibility for low cost since we're already in Weaveworks land as well.
+visibility for low cost since we're already in Weaveworks land as well. This is
+currently very dangerous, because it provides root access to anyone that can
+access the UI. However, this is just a sandbox environment so that's fine.
+Just be aware that if you have any interest in using Weave Scope for real, it
+should be put behind a reverse proxy with auth of some sort!
 
 ## Users
 
