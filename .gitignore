@@ -19,3 +19,4 @@ ansible/keys/public
 demokey.key
 
 node_modules
+/sandbox
