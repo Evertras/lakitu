@@ -29,8 +29,13 @@ job "periodic-cleanup" {
         args = [
           "-c",
           <<-EOF
+          set -eo pipefail
           source local/nomad_servers.env
-          nomad status | grep ' dead ' | grep -E '/periodic-[0-9]+ ' | awk '{ print $1 }' | xargs -I{} nomad stop -purge {}
+          DEAD_IDS=$(nomad status | grep ' dead ' | grep -E '/periodic-[0-9]+ ' | awk '{ print $1 }')
+          JOBS=$(awk -F'/' '{ print $1 }' <<< "$DEAD_IDS" | sort -u)
+          for JOB in $JOBS; do
+            grep "$JOB/periodic-" <<< "$DEAD_IDS" | head -n-5 | xargs -I{} -P5 nomad stop -purge {}
+          done
           EOF
         ]
       }
