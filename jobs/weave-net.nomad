@@ -71,6 +71,8 @@ job "weave-net" {
             --ipalloc-init=observer \
             --no-restart \
             --no-dns \
+            --without-dns \
+            --no-discovery \
             $(cat local/weave_peers)
           docker attach weave
           EOF
