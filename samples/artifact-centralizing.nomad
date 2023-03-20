@@ -200,20 +200,24 @@ job "artifact-centralizing" {
           set -x
           source ${NOMAD_ALLOC_DIR}/nomad-funcs.sh
 
-          ls ../watch-logs
-          #mkdir -p ../${var.prefix}
+          # Infinitely look for all allocs and any centralized files
+          while true; do
+            allocs=$(nomad-get-running-allocs)
 
-          allocs=$(nomad-get-running-allocs)
+            for alloc in $$${allocs}; do
+              echo Checking $$${alloc}
+              nomad-get-fs-for-alloc $$${alloc}
+              nomad-get-fs-for-alloc $$${alloc}
+            done
 
-          for alloc in $$${allocs}; do
-            echo Checking $$${alloc}
-            nomad-get-fs-for-alloc $$${alloc}
-            nomad-get-fs-for-alloc $$${alloc}
+            # Check again in 5 seconds
+            sleep 5s
+
+            # This is dumb for demo purposes, but we need to know when to stop...
+            if nomad alloc status ${NOMAD_ALLOC_ID} | grep 'Task "watch-logs" is "dead"'; then
+              exit 0
+            fi
           done
-
-          # This will never return, but the idea is that we wait for all
-          # background tasks to be "done"
-          wait
           EOF
         ]
       }
