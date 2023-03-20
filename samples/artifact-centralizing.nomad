@@ -57,20 +57,24 @@ job "artifact-centralizing" {
 
           log x x
           log y y
-          log z z
 
           log x "$(date)"
           log y "$(date)"
-          log z "$(date)"
 
-          for i in {0..60..6}; do
+          for i in {0..60}; do
             log x $i
             log y $i
-            log z $i
+
+            # z starts later, so we can test that we really get everything
+            # without race conditions
+            if [[ $i -gt 30 ]]; then
+              log z $i
+            fi
             sleep 1s
           done
 
-          cat /var/log/output/x.log
+          echo Done!
+
           EOF
         ]
       }
@@ -140,14 +144,25 @@ job "artifact-centralizing" {
             awk '$7 == "run" {print $1}'
         }
 
-        function nomad-get-fs() {
-          echo "Checking alloc $1"
-          subdirs=$(nomad alloc fs "$1" | tail -n+2 | awk '$5 != "alloc/" { print $5 }')
+        currently_watching=""
 
-          for subdir in $subdirs; do
+        function tail-file() {
+          alloc_id=$1
+          file=$2
+          target=$3
+
+          nomad alloc fs -f "$alloc_id" "$file" >> "$target"
+        }
+
+        function nomad-get-fs-for-alloc() {
+          alloc_id=$1
+          echo "Checking alloc $alloc_id"
+          tasksubdirs=$(nomad alloc fs "$alloc_id" | tail -n+2 | awk '$5 != "alloc/" { print $5 }')
+
+          for tasksubdir in $tasksubdirs; do
             # -H gets us the byte size in output
-            if contents=$(nomad alloc fs -H "$1" "$${subdir}/${var.prefix}"); then
-              echo "  > Found dir for $subdir"
+            if contents=$(nomad alloc fs -H "$alloc_id" "$${tasksubdir}/${var.prefix}"); then
+              echo "  > Found dir for $tasksubdir"
 
               # Note: This will BREAK for anything with a space in the filename!
               files=$(tail -n+2 <<< "$contents" | awk '{print $4}')
@@ -155,14 +170,21 @@ job "artifact-centralizing" {
               # This is a bit nasty, but hardcode into the other task directory...
               # the Nomad docker driver doesn't like trying to use ${NOMAD_ALLOC_DIR}
               # for a volume without some explicit security flags.
-              dir="../watch-logs/${var.prefix}/$${subdir}"
+              dir="../watch-logs/${var.prefix}/$${tasksubdir}"
               mkdir -p $dir
               for file in $files; do
+                if [[ "$currently_watching" =~ "$${file}" ]]; then
+                  continue
+                fi
+
+                currently_watching="$currently_watching
+        $file"
+
                 # Start tailing the file in the background
-                nomad alloc fs -f $1 "$${subdir}/${var.prefix}/$${file}" > $${dir}/$${file} &
+                tail-file "$alloc_id" "$${tasksubdir}/${var.prefix}/$${file}" "$${dir}/$${file}" &
               done
             else
-              echo "  > Skipping $subdir, no centralized artifacts found"
+              echo "  > Skipping $tasksubdir, no centralized artifacts found"
             fi
           done
         }
@@ -185,7 +207,8 @@ job "artifact-centralizing" {
 
           for alloc in $$${allocs}; do
             echo Checking $$${alloc}
-            nomad-get-fs $$${alloc}
+            nomad-get-fs-for-alloc $$${alloc}
+            nomad-get-fs-for-alloc $$${alloc}
           done
 
           # This will never return, but the idea is that we wait for all
