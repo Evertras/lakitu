@@ -1,5 +1,5 @@
 # Which versions of various tools to both put on the machines and have locally
-NOMAD_VERSION := 1.3.5
+NOMAD_VERSION := 1.5.2
 CONSUL_VERSION := 1.9.6
 VAULT_VERSION := 1.7.2
 WANDER_VERSION := 0.8.1
