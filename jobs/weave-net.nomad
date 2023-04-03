@@ -68,7 +68,6 @@ job "weave-net" {
           WEAVE_STATUS_ADDR=0.0.0.0:6782 weave launch \
             --ipalloc-range 10.8.0.0/13 \
             --no-default-ipalloc \
-            --ipalloc-init=observer \
             --no-restart \
             --no-dns \
             --without-dns \
