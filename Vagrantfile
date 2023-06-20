@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
   # Use the bento version because it's considered friendlier for multiple
   # providers compared to the "official" ubuntu version
-  config.vm.box = "bento/ubuntu-20.04"
+  config.vm.box = "bento/ubuntu-22.04"
 
   # Give a bit more memory than default 1 GB, may need to tweak this depending
   # on host machine
