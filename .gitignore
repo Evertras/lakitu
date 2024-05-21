@@ -20,3 +20,6 @@ demokey.key
 
 node_modules
 /sandbox
+
+# Empty file to note when all python requirements have been installed
+.requirements-installed

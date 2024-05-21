@@ -93,8 +93,13 @@ clean: clean-consul-certs
 	python -m venv .venv
 
 # Local ansible
-.venv/bin/ansible: .venv/bin/pip
-	./.venv/bin/pip install ansible
+.venv/bin/ansible: .requirements-installed
+
+# Install all local requirements
+.requirements-installed: requirements.txt .venv/bin/pip
+	./.venv/bin/pip install -r requirements.txt
+	./.venv/bin/ansible-galaxy install -r requirements.yaml
+	@touch .requirements-installed
 
 # For now we only support Linux 64 bit and MacOS
 ifeq ($(shell uname), Darwin)
