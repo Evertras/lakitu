@@ -193,6 +193,34 @@ To SSH in as one of the users, run:
 ssh -i ansible/keys/private/mario mario@192.168.56.3
 ```
 
+## Trouble shooting
+
+### "vagrant up" does not run due to VirtualBox
+
+The situation is
+
+```bash
+(.venv) xxxx$ vagrant up
+No usable default provider could be found for your system.
+
+Vagrant relies on interactions with 3rd party systems, known as
+"providers", to provide Vagrant with resources to run development
+environments. Examples are VirtualBox, VMware, Hyper-V.
+
+The easiest solution to this message is to install VirtualBox, which
+is available for free on all major platforms.
+
+If you believe you already have a provider available, make sure it
+is properly installed and configured. You can see more details about
+why a particular provider isn't working by forcing usage with
+`vagrant up --provider=PROVIDER`, which should give you a more specific
+error message for that particular provider.
+```
+
+Actually it was Virtual Box version issue. Please see <https://qiita.com/masuda401/items/992013f7ebff1a569d47> (in Japanese.)
+
+I just manually download and update Virtual Box from <https://www.virtualbox.org/wiki/Linux_Downloads>. It will solve this issue.
+
 ## Various TODOs
 
 In no particular order and not an exclusive list, just jotting things down here.
