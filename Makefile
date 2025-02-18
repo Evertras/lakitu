@@ -163,7 +163,7 @@ ansible/roles/vault/files/vault:
 
 # Generate an encryption key on the fly
 ansible/roles/consul/vars/main.yaml: bin/consul
-	@echo "---\nconsul_encryption_key: $(shell ./bin/consul keygen)" > ansible/roles/consul/vars/main.yaml
+	@echo "consul_encryption_key: $(shell ./bin/consul keygen)" > ansible/roles/consul/vars/main.yaml
 
 .PHONY: clean-consul-certs
 clean-consul-certs:
